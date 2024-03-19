@@ -182,8 +182,6 @@
         text-align: justify;
         height: 100%;
         gap: .5rem;
-
-        & .last-message-container {}
     }
 }
 
@@ -245,7 +243,6 @@
         height: 100%;
         gap: .5rem;
 
-        & .last-message-container {}
     }
 }
 </style>

@@ -4,6 +4,10 @@
   font-family: "Nunito", sans-serif;
 }
 
+input {
+  outline: none;
+}
+
 html,
 body,
 #app {
@@ -27,4 +31,39 @@ body,
 
 ::-webkit-scrollbar-thumb:hover {
   background: #acacac;
+}
+
+
+
+
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+$infinite-animation: 2s linear infinite;
+
+.loader {
+  border: 5px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 5px solid #EFB8C8;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin $infinite-animation;
+  animation: spin $infinite-animation;
 }
