@@ -1,19 +1,35 @@
 <script setup lang="ts">
 import Chat from './Chat.vue'
+import { ref, watch } from 'vue';
+
+import { useDisplayInfoStorage } from "../storage/displayInfo";
+
+const displayInfo = useDisplayInfoStorage();
+
+
+const isTextInputed = ref(false);
+const message = ref("");
+
+watch(() => message.value, () => {
+    isTextInputed.value = message.value.length != 0;
+}, { immediate: true })
+
 </script>
 
 <template>
     <div class="dialogue-container">
-        <!-- <div class="no-dialogue">
+        <div v-if="!displayInfo.isDialogueOpen" class="no-dialogue">
             No dialogue picked
-        </div> -->
-        <div class="dialogue">
+        </div>
+        <div v-else class="dialogue">
             <div class="chat-header">
-                <div class="back-btn"><span>B</span></div>
                 <div class="person">
                     <div class="nickname">
                         <span>NickNadfsdsfdsfdsdsfsfme</span>
                     </div>
+                </div>
+                <div @click="displayInfo.closeDialogue" class="back-btn">
+                    <img src="/add.svg" alt="Exit">
                 </div>
             </div>
             <div class="chat">
@@ -21,9 +37,9 @@ import Chat from './Chat.vue'
             </div>
             <div class="input-field">
                 <div class="input-container">
-                    <input type="text" placeholder="Enter text..." />
+                    <input type="text" v-model="message" placeholder="Write a message..." />
                 </div>
-                <div class="send-btn">Send</div>
+                <div class="send-btn" :class="isTextInputed ? 'send' : ''">Send</div>
             </div>
         </div>
     </div>
@@ -45,15 +61,17 @@ import Chat from './Chat.vue'
 
         & .chat-header {
             background-color: azure;
-            display: grid;
-            grid-template-columns: 10% 90%;
-            place-items: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             font-weight: 600;
             font-size: 1.5rem;
             padding: 0 .5rem;
 
             & .back-btn {
-                background-color: rgb(255, 255, 255);
+                position: absolute;
+                right: .2rem;
+                background-color: rgb(255, 0, 0);
                 border-radius: 50%;
                 width: 30px;
                 height: 30px;
@@ -63,6 +81,11 @@ import Chat from './Chat.vue'
                 align-items: center;
                 cursor: pointer;
                 transition: all .3s ease;
+
+                & img {
+                    height: 100%;
+                    transform: rotate(45deg);
+                }
 
                 &:hover {
                     background-color: rgb(234, 234, 234);
@@ -80,10 +103,8 @@ import Chat from './Chat.vue'
             justify-content: space-between;
             border-radius: 1rem;
             gap: .5rem;
-            padding: 1rem;
             margin: 0 .5rem;
             align-items: center;
-            background-color: #ebebeb;
 
             & .input-container {
                 width: 100%;
@@ -94,6 +115,7 @@ import Chat from './Chat.vue'
                     padding: 1rem;
                     height: 2rem;
                     font-size: 1.25rem;
+                    border-radius: .9rem;
                     width: 100%;
                     outline: none;
                     border: 0;
@@ -101,18 +123,27 @@ import Chat from './Chat.vue'
             }
 
             .send-btn {
+                position: absolute;
+                right: .5rem;
+                bottom: 7rem;
                 background-color: rgb(247, 247, 247);
-                height: 4.25rem;
+                height: 4rem;
+                opacity: .9;
                 aspect-ratio: 1/1;
                 cursor: pointer;
                 display: grid;
                 place-content: center;
                 transition: all .2s ease;
                 border-radius: 50%;
+                transform: translate(200%);
 
                 &:hover {
                     background-color: #e8e8e8;
                 }
+            }
+
+            & .send {
+                transform: translate(0);
             }
         }
     }
