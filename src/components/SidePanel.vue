@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import ChatsList from './ChatsList.vue';
-import { ref, defineProps, watch } from 'vue'
+import SettingsWindow from './SettingsWindow.vue';
+import AddNewChat from './AddNewChat.vue';
+import { ref, watch } from 'vue'
 import { useDisplayInfoStorage } from "../storage/displayInfo";
 
 const displayInfo = useDisplayInfoStorage();
@@ -10,8 +12,6 @@ const props = defineProps<{
 
 const isFix = ref(props.sideBarFixes);
 const isOpenSearchBar = ref(false);
-const isSettingsOpen = ref(false);
-const isAddNewChat = ref(false);
 
 watch(() => props.sideBarFixes, () => {
     isFix.value = !isFix.value;
@@ -19,14 +19,6 @@ watch(() => props.sideBarFixes, () => {
 
 const changeSearchBarStatus = () => {
     isOpenSearchBar.value = !isOpenSearchBar.value;
-}
-
-const addNewDialogue = () => {
-    isAddNewChat.value = true;
-}
-
-const openSettings = () => {
-    isSettingsOpen.value = true;
 }
 
 </script>
@@ -41,7 +33,7 @@ const openSettings = () => {
                 <div @click="changeSearchBarStatus()" class="search-bar-icon">
                     <img src="/search-icon.svg" alt="search">
                 </div>
-                <div @click="openSettings()" class="settings-icon">
+                <div @click="displayInfo.openSettings" class="settings-icon">
                     <img src="/settings-icon.svg" alt="search">
                 </div>
                 <div @click="displayInfo.sidePanelChange" :class="isFix ? 'left' : 'right'" class="hide-button-icon">
@@ -52,19 +44,26 @@ const openSettings = () => {
                 <input type="text" placeholder="Write chat name...">
             </div>
         </div>
-
         <div class="chat-table">
             <ChatsList></ChatsList>
         </div>
-        <div @click="addNewDialogue()" class="add-new-dialogue">
+        <div @click="displayInfo.addNewDialogue" class="add-new-dialogue">
             <img src="/add.svg" alt="add">
         </div>
-        <div v-if="isAddNewChat"></div>
-        <div v-if="isSettingsOpen" class="settings-window"> </div>
     </div>
+    <AddNewChat :class="displayInfo.isAddNewChat ? 'open' : 'close'"></AddNewChat>
+    <SettingsWindow :class="displayInfo.isSettingsOpen ? 'open' : 'close'" class="settings-window"> </SettingsWindow>
 </template>
 
 <style scoped lang="scss">
+.close {
+    transform: translateY(-100%);
+}
+
+.open {
+    transform: translateY(0);
+}
+
 .side-panel-container {
     width: 100%;
     display: grid;
@@ -161,11 +160,18 @@ const openSettings = () => {
                 cursor: pointer;
 
                 & img {
+                    transition: transform .5s ease;
                     aspect-ratio: 1/1;
                 }
 
                 &:hover {
                     background-color: rgb(211, 211, 211);
+                }
+            }
+
+            & .settings-icon:hover {
+                & img {
+                    transform: rotate(90deg);
                 }
             }
 

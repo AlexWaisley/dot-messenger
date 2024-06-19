@@ -18,5 +18,6 @@ import ChatPreview from './ChatPreview.vue';
     display: flex;
     flex-direction: column;
     gap: .5rem;
+
 }
 </style>

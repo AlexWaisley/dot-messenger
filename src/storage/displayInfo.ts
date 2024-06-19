@@ -6,11 +6,27 @@ export const useDisplayInfoStorage = defineStore('displayInfo',()=>{
     const isLoading = ref(false);
     const isDialogueOpen = ref(false);
     const isMainWithSidePanel = ref(true);
+    const isAddNewChat = ref(false);
+    const isSettingsOpen = ref(false);
 
+    const openSettings = () => {
+        isSettingsOpen.value = true;
+    }
+    
     const closeDialogue = ()=>{
         isDialogueOpen.value = false;
     }
+    const closeSettings = ()=>{
+        isSettingsOpen.value = false;
+    }
 
+    const addNewDialogue = () => {
+        isAddNewChat.value = true;
+    }
+    const closeNewDialogueWindow = ()=>{
+        isAddNewChat.value = false;
+    }
+    
     const openDialogue = ()=>{
         if(window.innerWidth<650){
             isMainWithSidePanel.value = false;
@@ -31,6 +47,6 @@ export const useDisplayInfoStorage = defineStore('displayInfo',()=>{
     }
 
     return{
-        loggedIn,isUserLoggedIn,isLoading,loadingStatusChange, closeDialogue, openDialogue, isDialogueOpen, isMainWithSidePanel, sidePanelChange
+        loggedIn,isUserLoggedIn,isLoading,loadingStatusChange, closeDialogue, openDialogue, isDialogueOpen, isMainWithSidePanel, sidePanelChange, isAddNewChat, addNewDialogue, closeNewDialogueWindow, openSettings, isSettingsOpen, closeSettings
     }
 })

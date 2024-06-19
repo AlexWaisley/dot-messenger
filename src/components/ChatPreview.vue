@@ -34,6 +34,10 @@ const displayInfo = useDisplayInfoStorage();
     gap: .5rem;
     border-radius: .5rem;
 
+    &:nth-child(even) {
+        background-color: bisque;
+    }
+
     & .avatar-container {
         display: flex;
         height: 100px;
