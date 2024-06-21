@@ -1,7 +1,39 @@
 <script setup lang="ts">
+import { useMessengerInfoStorage } from "../storage";
 import { useDisplayInfoStorage } from "../storage/displayInfo";
+import { ref, watch } from 'vue';
 
 const displayInfo = useDisplayInfoStorage();
+const messengerInfo = useMessengerInfoStorage();
+
+const props = defineProps<{
+    id: number,
+    name: string
+}>();
+console.log(messengerInfo.messages);
+
+messengerInfo.getMessages(messengerInfo.user, props, 0, 1);
+const lastMessage = ref(messengerInfo.messages.find((element) => element.chatId === props.id));
+const lastMessageStr = ref("");
+if (lastMessage.value !== undefined) {
+    lastMessageStr.value = lastMessage.value.content;
+}
+else {
+    lastMessageStr.value = "Dialog is empty";
+}
+
+watch(messengerInfo.messages, () => {
+    lastMessage.value = messengerInfo.messages.find((element) => element.chatId === props.id);
+    if (lastMessage.value !== undefined) {
+        lastMessageStr.value = lastMessage.value.content;
+    }
+    else {
+        lastMessageStr.value = "Dialog is empty";
+    }
+})
+
+
+
 </script>
 
 <template>
@@ -13,13 +45,13 @@ const displayInfo = useDisplayInfoStorage();
         </div>
         <div class="text-container">
             <div class="chat-info">
-                <div class="user-nick">NickNadfsdsfdsfdsdasdasasdasdasdasdsfdsdfgsfdgsfdgfdsgsfsfme</div>
+                <div class="user-nick">{{ props.name }}</div>
                 <div class="last-message-info">
                     <div class="time">11:00</div>
                 </div>
             </div>
             <div class="last-message-container">
-                <div class="content">I love BBC I love BBC I love BBC I love BBC I love BBC I love BBC I love BBC </div>
+                <div class="content">{{ lastMessageStr }}</div>
             </div>
         </div>
     </div>

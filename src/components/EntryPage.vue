@@ -1,13 +1,19 @@
 <script setup lang="ts">
-import { useDisplayInfoStorage } from '../storage/displayInfo';
+import { useDisplayInfoStorage, useMessengerInfoStorage } from '../storage';
+import { ref } from 'vue';
 
 const displayInfo = useDisplayInfoStorage();
-const sendRequest = () => {
+const messengerInfo = useMessengerInfoStorage();
+
+const login = ref("");
+const password = ref("");
+
+const sendRequest = async () => {
     displayInfo.loadingStatusChange();
-    setTimeout(() => {
+    if (await messengerInfo.loginUser({ login: login.value, password: password.value })) {
         displayInfo.loggedIn();
-        displayInfo.loadingStatusChange();
-    }, 1000);
+    }
+    displayInfo.loadingStatusChange();
 }
 </script>
 <template>
@@ -15,14 +21,14 @@ const sendRequest = () => {
         <div class="login-block">
             <div class="form-row">
                 <div class="input-data">
-                    <input type="text" required>
+                    <input v-model="login" type="text" required>
                     <div class="underline"></div>
                     <label for="">Nickname:</label>
                 </div>
             </div>
             <div class="form-row">
                 <div class="input-data">
-                    <input type="password" required>
+                    <input v-model="password" type="password" required>
                     <div class="underline"></div>
                     <label for="">Password:</label>
                 </div>

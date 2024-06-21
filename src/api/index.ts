@@ -4,7 +4,7 @@ import { Chat, ChatDto, Message, MessageDto, User, UserDto } from "../models";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 export const api = {
-    async CheckUserValid(user:User):Promise<User|null>{
+    async CheckUserValid(user:UserDto):Promise<User|null>{
         try{
             const {data,status} = await axios.post(`${apiUrl}/UserInfo/login`,user);
             console.log('[api]', 'User valid status:', status);

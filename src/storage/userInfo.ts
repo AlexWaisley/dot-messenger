@@ -6,15 +6,22 @@ import toastr from 'toastr';
 import 'toastr/toastr.scss';
 
 export const useMessengerInfoStorage = defineStore('messengerInfo',()=>{
-    const user = ref<User>();
+    const user = ref<User>({
+        id:0,
+        login:""
+    });
     const userChats = ref<Chat[]>([]);
     const messages = ref<Message[]>([]);
 
-    const loginUser = async (inpUser:User)=>{
+    const loginUser = async (inpUser:UserDto):Promise<boolean>=>{
         const tempUser = await api.CheckUserValid(inpUser);
         if(tempUser !== null){
             user.value = tempUser;
+            await getUserChats(user.value);
+            return true;
         }
+        toastr.error("Login or password is incorrect");
+        return false
     }
 
     const registerNewUser = async (userForm:UserDto)=>{
@@ -31,7 +38,10 @@ export const useMessengerInfoStorage = defineStore('messengerInfo',()=>{
     const getMessages = async(inpUser:User,inpChat:Chat,offset:number,count:number)=>{
         const tempMessages = await api.GetChatMessages(inpUser, inpChat, offset, count);
         if(tempMessages !== null){
-            messages.value = tempMessages;
+            tempMessages.forEach((element)=>{
+                if(messages.value.find((messege)=>messege!==element)=== undefined){
+                messages.value.push(element);}
+            })
         }
     }
 
@@ -51,4 +61,4 @@ export const useMessengerInfoStorage = defineStore('messengerInfo',()=>{
 
     return{
         user, loginUser, userChats, getUserChats, messages, getMessages, registerNewUser, addNewChat, addMessageToChat    }
-}) 
+});

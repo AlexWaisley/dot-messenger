@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import ChatPreview from './ChatPreview.vue';
+import { useMessengerInfoStorage } from '../storage';
+
+const messengerInfo = useMessengerInfoStorage();
 
 </script>
 
 <template>
     <div class="chats-list">
-        <ChatPreview v-for="_ in 20"> </ChatPreview>
+        <ChatPreview v-for="chat in messengerInfo.userChats" :id="chat.id" :name="chat.name"></ChatPreview>
     </div>
 </template>
 
