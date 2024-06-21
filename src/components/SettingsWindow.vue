@@ -17,24 +17,6 @@ const displayInfo = useDisplayInfoStorage();
                 <div class="settings">
                     <div class="option"></div>
                     <div class="option"></div>
-                    <div class="option"></div>
-                    <div class="option"></div>
-                    <div class="option"></div>
-                    <div class="option"></div>
-                    <div class="option"></div>
-                    <div class="option"></div>
-                    <div class="option"></div>
-                    <div class="option"></div>
-                    <div class="option"></div>
-                    <div class="option"></div>
-                    <div class="option"></div>
-                    <div class="option"></div>
-                    <div class="option"></div>
-                    <div class="option"></div>
-                    <div class="option"></div>
-                    <div class="option"></div>
-                    <div class="option"></div>
-                    <div class="option"></div>
                 </div>
             </div>
         </div>
@@ -49,8 +31,9 @@ const displayInfo = useDisplayInfoStorage();
     height: 100%;
     background-color: rgba(0, 0, 0, 0.377);
     z-index: 3;
-    display: grid;
-    place-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     transition: all .5s ease;
 
 
