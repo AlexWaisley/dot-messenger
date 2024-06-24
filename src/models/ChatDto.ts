@@ -1,4 +1,4 @@
 export type ChatDto = {
     name:string,
-    opponentId:number,
+    opponentId:string,
 }

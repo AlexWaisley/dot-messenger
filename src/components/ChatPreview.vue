@@ -2,6 +2,7 @@
 import { useMessengerInfoStorage } from "../storage";
 import { useDisplayInfoStorage } from "../storage/displayInfo";
 import { ref, watch } from 'vue';
+import moment from 'moment';
 
 const displayInfo = useDisplayInfoStorage();
 const messengerInfo = useMessengerInfoStorage();
@@ -10,13 +11,24 @@ const props = defineProps<{
     id: number,
     name: string
 }>();
-console.log(messengerInfo.messages);
 
-messengerInfo.getMessages(messengerInfo.user, props, 0, 1);
+setInterval(async () => {
+    await messengerInfo.getMessages(props, 0, 1);
+}, 1000);
+
 const lastMessage = ref(messengerInfo.messages.find((element) => element.chatId === props.id));
 const lastMessageStr = ref("");
+const lastMessageTime = ref();
+
+
 if (lastMessage.value !== undefined) {
     lastMessageStr.value = lastMessage.value.content;
+    if (moment().format('L') === moment.unix(lastMessage.value.time).format('L')) {
+        lastMessageTime.value = moment.unix(lastMessage.value.time).format('HH:MM');
+    }
+    else {
+        lastMessageTime.value = moment.unix(lastMessage.value.time).format("lll");
+    }
 }
 else {
     lastMessageStr.value = "Dialog is empty";
@@ -26,18 +38,29 @@ watch(messengerInfo.messages, () => {
     lastMessage.value = messengerInfo.messages.find((element) => element.chatId === props.id);
     if (lastMessage.value !== undefined) {
         lastMessageStr.value = lastMessage.value.content;
+        if (moment().format('L') === moment.unix(lastMessage.value.time).format('L')) {
+            lastMessageTime.value = moment.unix(lastMessage.value.time).format('HH:MM');
+        }
+        else {
+            lastMessageTime.value = moment.unix(lastMessage.value.time).format("lll");
+        }
     }
     else {
         lastMessageStr.value = "Dialog is empty";
     }
 })
 
-
+const openChat = async () => {
+    if (messengerInfo.currentChat.id !== props.id) {
+        await messengerInfo.changeCurrentChat({ id: props.id, name: props.name });
+        displayInfo.openDialogue();
+    }
+}
 
 </script>
 
 <template>
-    <div @click="displayInfo.openDialogue" class="chat-preview-container">
+    <div @click="openChat" class="chat-preview-container">
         <div class="avatar-container">
             <div class="image-wrapper">
                 <img src="/04856.jpg" alt="someImg">
@@ -47,7 +70,7 @@ watch(messengerInfo.messages, () => {
             <div class="chat-info">
                 <div class="user-nick">{{ props.name }}</div>
                 <div class="last-message-info">
-                    <div class="time">11:00</div>
+                    <div class="time">{{ lastMessageTime }}</div>
                 </div>
             </div>
             <div class="last-message-container">

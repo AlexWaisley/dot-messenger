@@ -22,9 +22,9 @@ export const api = {
     },
     async GetChatMessages(user:User,chat:Chat,offset:number,count:number):Promise<Message[]|null>{
         try{
-        const {data,status} = await axios.get(`${apiUrl}/UserInfo/users/${user.id}/chats/${chat.id}/messages?offset=${offset}&count=${count}`);
-        console.log('[api]', 'Getting chat messages status:', status);
-        return data;
+            const {data,status} = await axios.get(`${apiUrl}/UserInfo/users/${user.id}/chats/${chat.id}/messages?offset=${offset}&count=${count}`);
+            console.log('[api]', 'Getting chat messages status:', status);
+            return data;
         }
         catch(e){
             console.log(e);

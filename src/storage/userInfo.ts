@@ -12,12 +12,27 @@ export const useMessengerInfoStorage = defineStore('messengerInfo',()=>{
     });
     const userChats = ref<Chat[]>([]);
     const messages = ref<Message[]>([]);
+    const currentChat = ref<Chat>({
+        name:"BRUUUUUUUH, IT`S BROKEN",
+        id:0
+    });
+
+    const checkUserLogedIn = async():Promise<boolean>=>{
+        const jsonuser = localStorage.getItem("user");
+        if(jsonuser!==null){
+            user.value = JSON.parse(jsonuser);
+            await getUserChats();
+            return true;
+        }
+        return false
+    }
 
     const loginUser = async (inpUser:UserDto):Promise<boolean>=>{
         const tempUser = await api.CheckUserValid(inpUser);
         if(tempUser !== null){
             user.value = tempUser;
-            await getUserChats(user.value);
+            await getUserChats();
+            localStorage.setItem("user",JSON.stringify(user.value));
             return true;
         }
         toastr.error("Login or password is incorrect");
@@ -31,34 +46,41 @@ export const useMessengerInfoStorage = defineStore('messengerInfo',()=>{
         }
     }
 
-    const getUserChats = async(inpUser:User)=>{
-        userChats.value = await api.GetUserChats(inpUser);
+    const getUserChats = async()=>{
+        userChats.value = await api.GetUserChats(user.value);
     }
 
-    const getMessages = async(inpUser:User,inpChat:Chat,offset:number,count:number)=>{
+    const getMessages = async(inpChat:Chat,offset:number,count:number,inpUser:User = user.value)=>{
         const tempMessages = await api.GetChatMessages(inpUser, inpChat, offset, count);
         if(tempMessages !== null){
             tempMessages.forEach((element)=>{
-                if(messages.value.find((messege)=>messege!==element)=== undefined){
-                messages.value.push(element);}
+                if(messages.value.find((messege)=>messege.id===element.id) === undefined){
+                messages.value.unshift(element);
+            }
             })
         }
+        messages.value.sort((el1,el2)=>el2.time-el1.time);
     }
 
-    const addNewChat = async(inpUser:User,chatForm:ChatDto)=>{
+    const addNewChat = async(inpUser:User = user.value,chatForm:ChatDto)=>{
         const result = await api.AddChat(inpUser,chatForm);
         if(result !== null){
-            await getUserChats(inpUser);
+            await getUserChats();
         }
     }
 
-    const addMessageToChat = async (inpUser:User, inpChat:Chat, messageForm:MessageDto)=>{
+    const addMessageToChat = async (messageForm:MessageDto,inpUser:User = user.value, inpChat:Chat = currentChat.value)=>{
         const result = await api.AddMessage(inpUser, inpChat, messageForm);
         if(result !== null){
-            await getMessages(inpUser,inpChat,0,messages.value?.length+1);
+            await getMessages(inpChat,0,1,inpUser);
         }
+    }
+
+    const changeCurrentChat = async (newCurrChat: Chat)=>{
+        await getMessages(newCurrChat, 0, 20);
+        currentChat.value = newCurrChat;
     }
 
     return{
-        user, loginUser, userChats, getUserChats, messages, getMessages, registerNewUser, addNewChat, addMessageToChat    }
+        user, currentChat, loginUser, userChats, getUserChats, messages, getMessages, registerNewUser, addNewChat, addMessageToChat, changeCurrentChat, checkUserLogedIn    }
 });

@@ -1,15 +1,23 @@
 <script setup lang="ts">
-import Message from './Message.vue';
+import { Message } from '../models';
+import MessageComponent from './Message.vue';
+import { ref, watch } from 'vue';
+
+const props = defineProps<{
+    messages: Message[]
+}>();
+
+const currChatMesseges = ref(props.messages);
+watch(() => props.messages, () => {
+    currChatMesseges.value = props.messages;
+}, { immediate: true });
+
+
 </script>
 
 <template>
     <div class="chat-container">
-        <Message></Message>
-        <Message></Message>
-        <Message></Message>
-        <Message></Message>
-        <Message></Message>
-        <Message></Message>
+        <MessageComponent v-for="message in props.messages" :message="message"></MessageComponent>
     </div>
 </template>
 

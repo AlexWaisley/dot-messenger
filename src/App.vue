@@ -1,9 +1,17 @@
 <script setup lang="ts">
 import Main from './components/Main.vue';
 import EntryPage from './components/EntryPage.vue';
-import { useDisplayInfoStorage } from './storage/displayInfo';
+import { useDisplayInfoStorage, useMessengerInfoStorage } from './storage';
+import { onMounted } from 'vue';
 
 const displayInfo = useDisplayInfoStorage();
+const messengerInfo = useMessengerInfoStorage();
+
+onMounted(async () => {
+  if (await messengerInfo.checkUserLogedIn()) {
+    displayInfo.loggedIn();
+  }
+})
 
 </script>
 

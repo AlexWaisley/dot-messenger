@@ -2,18 +2,41 @@
 import Chat from './Chat.vue'
 import { ref, watch } from 'vue';
 
-import { useDisplayInfoStorage } from "../storage/displayInfo";
+import { useDisplayInfoStorage, useMessengerInfoStorage } from "../storage";
 
 const displayInfo = useDisplayInfoStorage();
-
+const messengerInfo = useMessengerInfoStorage();
 
 const isTextInputed = ref(false);
 const message = ref("");
-
+const currChatMesseges = ref(messengerInfo.messages.filter((element) => element.chatId === messengerInfo.currentChat.id));
 watch(() => message.value, () => {
     isTextInputed.value = message.value.length != 0;
 }, { immediate: true })
 
+watch(() => messengerInfo.currentChat.id, () => {
+    currChatMesseges.value = messengerInfo.messages.filter((element) => element.chatId === messengerInfo.currentChat.id);
+}, { immediate: true })
+
+watch(messengerInfo.messages, () => {
+    currChatMesseges.value = messengerInfo.messages.filter((element) => element.chatId === messengerInfo.currentChat.id);
+}, { immediate: true })
+
+const sendNewMessage = () => {
+    messengerInfo.addMessageToChat({ content: message.value });
+    message.value = "";
+}
+
+const loadMoreMessages = () => {
+    const length = messengerInfo.messages.filter((element) => element.chatId === messengerInfo.currentChat.id).length;
+    messengerInfo.getMessages(messengerInfo.currentChat, length, 20);
+}
+
+setInterval(async () => {
+    if (messengerInfo.currentChat.id !== 0) {
+        await messengerInfo.getMessages(messengerInfo.currentChat, 0, 20);
+    }
+}, 1000);
 </script>
 
 <template>
@@ -25,7 +48,7 @@ watch(() => message.value, () => {
             <div class="chat-header">
                 <div class="person">
                     <div class="nickname">
-                        <span>NickNadfsdsfdsfdsdsfsfme</span>
+                        <span>{{ messengerInfo.currentChat.name }}</span>
                     </div>
                 </div>
                 <div @click="displayInfo.closeDialogue" class="back-btn">
@@ -33,13 +56,14 @@ watch(() => message.value, () => {
                 </div>
             </div>
             <div class="chat">
-                <Chat></Chat>
+                <div @click="loadMoreMessages()">Load messages</div>
+                <Chat :messages="currChatMesseges"></Chat>
             </div>
             <div class="input-field">
                 <div class="input-container">
                     <input type="text" v-model="message" placeholder="Write a message..." />
                 </div>
-                <div class="send-btn" :class="isTextInputed ? 'send' : ''">Send</div>
+                <div @click="sendNewMessage()" class="send-btn" :class="isTextInputed ? 'send' : ''">Send</div>
             </div>
         </div>
     </div>

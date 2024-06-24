@@ -1,7 +1,20 @@
 <script setup lang="ts">
-import { useDisplayInfoStorage } from "../storage/displayInfo";
+import { api } from "../api";
+import { useDisplayInfoStorage, useMessengerInfoStorage } from "../storage";
+import { ref } from 'vue';
 
 const displayInfo = useDisplayInfoStorage();
+const messengerInfo = useMessengerInfoStorage();
+
+
+const chatName = ref("");
+const opponentNickname = ref("");
+
+const submit = async () => {
+    await api.AddChat(messengerInfo.user, { name: chatName.value, opponentId: opponentNickname.value });
+    messengerInfo.getUserChats();
+    displayInfo.closeNewDialogueWindow();
+}
 
 </script>
 <template>
@@ -10,20 +23,20 @@ const displayInfo = useDisplayInfoStorage();
             <div class="input-fields-container">
                 <div class="chat-name-field">
                     <label class="label">
-                        <input class="input" name="chat-name" type="text" required>
+                        <input class="input" v-model="chatName" name="chat-name" type="text" required>
                         <span class="placeholder">Enter chat name</span>
                     </label>
                 </div>
                 <div class="opponent-nickname-field">
                     <label class="label">
-                        <input class="input" name="opponent-nickname" type="text" required>
+                        <input class="input" v-model="opponentNickname" name="opponent-nickname" type="text" required>
                         <span class="placeholder">Enter opponent nickname</span>
                     </label>
                 </div>
             </div>
             <div class="action-buttons">
                 <div @click="displayInfo.closeNewDialogueWindow" class="cancel-btn">CANCEL</div>
-                <div @click="displayInfo.closeNewDialogueWindow" class="submit-btn">SUBMIT</div>
+                <div @click="submit()" class="submit-btn">SUBMIT</div>
             </div>
         </div>
     </div>
