@@ -3,15 +3,18 @@ import ChatsList from './ChatsList.vue';
 import SettingsWindow from './SettingsWindow.vue';
 import AddNewChat from './AddNewChat.vue';
 import { ref, watch } from 'vue'
-import { useDisplayInfoStorage } from "../storage/displayInfo";
+import { useDisplayInfoStorage, useMessengerInfoStorage } from "../storage";
 
 const displayInfo = useDisplayInfoStorage();
+const messengerInfo = useMessengerInfoStorage();
+
 const props = defineProps<{
     sideBarFixes: boolean
 }>();
 
 const isFix = ref(props.sideBarFixes);
 const isOpenSearchBar = ref(false);
+const searchChat = ref("");
 
 watch(() => props.sideBarFixes, () => {
     isFix.value = !isFix.value;
@@ -19,6 +22,10 @@ watch(() => props.sideBarFixes, () => {
 
 const changeSearchBarStatus = () => {
     isOpenSearchBar.value = !isOpenSearchBar.value;
+}
+
+const doSearch = () => {
+    messengerInfo.updateDisplayedChats(searchChat.value);
 }
 
 </script>
@@ -41,7 +48,10 @@ const changeSearchBarStatus = () => {
                 </div>
             </div>
             <div class="search-bar">
-                <input type="text" placeholder="Write chat name...">
+                <input type="text" v-model="searchChat" placeholder="Write chat name...">
+                <div @click="doSearch()" class="search-bar-icon">
+                    <img src="/search-icon.svg" alt="search">
+                </div>
             </div>
         </div>
         <div class="chat-table">
@@ -195,6 +205,28 @@ const changeSearchBarStatus = () => {
         width: 100%;
         max-height: 100%;
         overflow-y: auto;
+    }
+
+    & .search-bar {
+        & .search-bar-icon {
+            height: 30px;
+            width: 30px;
+            border-radius: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all .5s ease;
+            cursor: pointer;
+
+            & img {
+                transition: transform .5s ease;
+                aspect-ratio: 1/1;
+            }
+
+            &:hover {
+                background-color: rgb(211, 211, 211);
+            }
+        }
     }
 
     & .add-new-dialogue {

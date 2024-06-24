@@ -11,6 +11,7 @@ export const useMessengerInfoStorage = defineStore('messengerInfo',()=>{
         login:""
     });
     const userChats = ref<Chat[]>([]);
+    const displayedUserChats = ref<Chat[]>([]);
     const messages = ref<Message[]>([]);
     const currentChat = ref<Chat>({
         name:"BRUUUUUUUH, IT`S BROKEN",
@@ -48,6 +49,7 @@ export const useMessengerInfoStorage = defineStore('messengerInfo',()=>{
 
     const getUserChats = async()=>{
         userChats.value = await api.GetUserChats(user.value);
+        displayedUserChats.value = userChats.value;
     }
 
     const getMessages = async(inpChat:Chat,offset:number,count:number,inpUser:User = user.value)=>{
@@ -76,11 +78,15 @@ export const useMessengerInfoStorage = defineStore('messengerInfo',()=>{
         }
     }
 
+    const updateDisplayedChats = (findChat:string)=>{
+        displayedUserChats.value = userChats.value.filter((elem)=>elem.name.toLowerCase().includes(findChat.toLowerCase()));
+    }
+
     const changeCurrentChat = async (newCurrChat: Chat)=>{
         await getMessages(newCurrChat, 0, 20);
         currentChat.value = newCurrChat;
     }
 
     return{
-        user, currentChat, loginUser, userChats, getUserChats, messages, getMessages, registerNewUser, addNewChat, addMessageToChat, changeCurrentChat, checkUserLogedIn    }
+        user, currentChat, loginUser, userChats, getUserChats, messages, getMessages, registerNewUser, addNewChat, addMessageToChat, changeCurrentChat, checkUserLogedIn, displayedUserChats, updateDisplayedChats    }
 });

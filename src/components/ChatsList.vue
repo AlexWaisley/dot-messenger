@@ -8,7 +8,7 @@ const messengerInfo = useMessengerInfoStorage();
 
 <template>
     <div class="chats-list">
-        <ChatPreview v-for="chat in messengerInfo.userChats" :id="chat.id" :name="chat.name"></ChatPreview>
+        <ChatPreview v-for="chat in messengerInfo.displayedUserChats" :id="chat.id" :name="chat.name"></ChatPreview>
     </div>
 </template>
 
