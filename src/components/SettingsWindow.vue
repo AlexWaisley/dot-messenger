@@ -8,14 +8,13 @@ const displayInfo = useDisplayInfoStorage();
     <div class="container">
         <div class="settings-window">
             <div class="head">
-                <div class="label">Settings</div>
+                <div class="name">Settings</div>
                 <div @click="displayInfo.closeSettings" class="close-btn">
                     <img src="/add.svg" alt="Exit">
                 </div>
             </div>
             <div class="options-cover">
                 <div class="settings">
-                    <div class="option"></div>
                     <div class="option"></div>
                 </div>
             </div>
@@ -36,7 +35,6 @@ const displayInfo = useDisplayInfoStorage();
     align-items: center;
     transition: all .5s ease;
 
-
     & .settings-window {
         width: max(50%, 400px);
         height: max(35%, 300px);
@@ -49,12 +47,12 @@ const displayInfo = useDisplayInfoStorage();
         & .head {
             width: 100%;
             display: flex;
-            height: 10%;
-            padding: .2rem 0;
+            height: 15%;
             justify-content: center;
+            align-items: center;
             position: relative;
 
-            & .label {
+            & .name {
                 font-size: 2rem;
             }
 

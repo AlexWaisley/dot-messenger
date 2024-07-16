@@ -37,7 +37,7 @@ watch(() => props.message, () => {
         </div>
         <div class="text-container">
             <div class="last-message-container">
-                <div class="content">{{ message.content }} </div>
+                <div class="content">{{ message.content }}</div>
             </div>
         </div>
     </div>
@@ -45,12 +45,14 @@ watch(() => props.message, () => {
 </template>
 
 <style scoped lang="scss">
+@import '../styles/variables.scss';
+
 .non-user-message {
     display: flex;
     transition: all .3s ease;
     align-items: flex-end;
     gap: 1rem;
-    background-color: #dadada;
+    background: $chat-opponent-message;
     padding: .5rem;
     border-radius: .5rem;
 
@@ -103,7 +105,7 @@ watch(() => props.message, () => {
     transition: all .3s ease;
     align-items: flex-end;
     gap: 1rem;
-    background-color: #fafafa;
+    background: $chat-user-message;
     padding: .5rem;
     border-radius: .5rem;
 
@@ -121,7 +123,6 @@ watch(() => props.message, () => {
             width: 100%;
             display: flex;
             flex-direction: column;
-
             gap: .25rem;
 
             & .last-message-info {
@@ -154,7 +155,6 @@ watch(() => props.message, () => {
         text-align: justify;
         height: 100%;
         gap: .5rem;
-
     }
 }
 </style>

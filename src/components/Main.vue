@@ -8,16 +8,15 @@ const displayInfo = useDisplayInfoStorage();
 
 <template>
     <div class="main-page" :class="displayInfo.isMainWithSidePanel ? 'with-side-panel' : 'without-side-panel'">
-        <SidePanel v-if="displayInfo.isMainWithSidePanel" v-bind:side-bar-fixes="displayInfo.isMainWithSidePanel"
-            @change-side-bar-position="displayInfo.sidePanelChange"></SidePanel>
+        <SidePanel v-if="displayInfo.isMainWithSidePanel">
+        </SidePanel>
 
         <div v-else class="hover-me">
             <div class="img-container">
                 <img src="/Arrow-bar-right.svg" alt="To right">
             </div>
             <div class="side-panel">
-                <SidePanel v-bind:side-bar-fixes="displayInfo.isMainWithSidePanel">
-                </SidePanel>
+                <SidePanel> </SidePanel>
             </div>
         </div>
         <DialogueSpace class="dialogue-space"></DialogueSpace>
@@ -39,7 +38,6 @@ const displayInfo = useDisplayInfoStorage();
     @media screen and (min-width: 650px) {
         grid-template-columns: max(25%, 300px) min(75%, calc(100vw - 300px));
     }
-
 }
 
 .without-side-panel {
@@ -47,16 +45,17 @@ const displayInfo = useDisplayInfoStorage();
 
     & .hover-me {
         position: absolute;
-        width: 160px;
+        width: 100px;
         height: 100%;
         user-select: none;
         transition: all 0.5s ease;
         display: flex;
         flex-direction: row-reverse;
+        z-index: 3;
 
         & .img-container {
             height: 100%;
-            max-width: 160px;
+            max-width: 100px;
             display: flex;
             justify-self: center;
             transition: all 0.5s ease;

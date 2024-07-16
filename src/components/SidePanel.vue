@@ -2,23 +2,14 @@
 import ChatsList from './ChatsList.vue';
 import SettingsWindow from './SettingsWindow.vue';
 import AddNewChat from './AddNewChat.vue';
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { useDisplayInfoStorage, useMessengerInfoStorage } from "../storage";
 
 const displayInfo = useDisplayInfoStorage();
 const messengerInfo = useMessengerInfoStorage();
 
-const props = defineProps<{
-    sideBarFixes: boolean
-}>();
-
-const isFix = ref(props.sideBarFixes);
 const isOpenSearchBar = ref(false);
 const searchChat = ref("");
-
-watch(() => props.sideBarFixes, () => {
-    isFix.value = !isFix.value;
-}, { immediate: true })
 
 const changeSearchBarStatus = () => {
     isOpenSearchBar.value = !isOpenSearchBar.value;
@@ -27,7 +18,6 @@ const changeSearchBarStatus = () => {
 const doSearch = () => {
     messengerInfo.updateDisplayedChats(searchChat.value);
 }
-
 </script>
 
 <template>
@@ -43,13 +33,14 @@ const doSearch = () => {
                 <div @click="displayInfo.openSettings" class="settings-icon">
                     <img src="/settings-icon.svg" alt="search">
                 </div>
-                <div @click="displayInfo.sidePanelChange" :class="isFix ? 'left' : 'right'" class="hide-button-icon">
+                <div @click="displayInfo.sidePanelChange" :class="!displayInfo.isMainWithSidePanel ? 'left' : 'right'"
+                    class="hide-button-icon">
                     <img src="/hide-button.svg" alt="Hide/Fix">
                 </div>
             </div>
             <div class="search-bar">
-                <input type="text" v-model="searchChat" placeholder="Write chat name...">
-                <div @click="doSearch()" class="search-bar-icon">
+                <input type="text" v-on:keyup.enter="doSearch()" v-model="searchChat" placeholder="Write chat name...">
+                <div @click="doSearch()" class="icon">
                     <img src="/search-icon.svg" alt="search">
                 </div>
             </div>
@@ -66,6 +57,8 @@ const doSearch = () => {
 </template>
 
 <style scoped lang="scss">
+@import '../styles/variables.scss';
+
 .close {
     transform: translateY(-100%);
 }
@@ -80,10 +73,11 @@ const doSearch = () => {
     height: 100%;
     overflow-y: auto;
     grid-template-rows: max(5%, 100px) min(95%, calc(100vh - 110px));
-    background-color: rgb(244, 244, 244);
+    background-color: $panel;
     position: relative;
     transition: all .5s ease;
     z-index: 2;
+    background-color: $panel;
 
     & .search-bar-on {
         & .navigation {
@@ -117,8 +111,13 @@ const doSearch = () => {
                 outline: none;
                 height: 0;
             }
-        }
 
+            & .icon {
+                img {
+                    height: 0 !important;
+                }
+            }
+        }
     }
 
 
@@ -131,6 +130,27 @@ const doSearch = () => {
         & .search-bar {
             display: flex;
             justify-content: center;
+
+            & .icon {
+                height: 30px;
+                width: 30px;
+                border-radius: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                transition: all .5s ease;
+                cursor: pointer;
+
+                & img {
+                    transition: all .5s ease;
+                    aspect-ratio: 1/1;
+                    height: 60%;
+                }
+
+                &:hover {
+                    background-color: rgb(211, 211, 211);
+                }
+            }
 
             & input {
                 width: 95%;
@@ -185,16 +205,12 @@ const doSearch = () => {
                 }
             }
 
-            & .left {
-                & img {
-                    transform: rotate(180deg);
-                }
+            & .left>img {
+                transform: rotate(180deg);
             }
 
-            & .right {
-                & img {
-                    transform: rotate(0);
-                }
+            & .right>img {
+                transform: rotate(0);
             }
         }
     }
@@ -205,28 +221,6 @@ const doSearch = () => {
         width: 100%;
         max-height: 100%;
         overflow-y: auto;
-    }
-
-    & .search-bar {
-        & .search-bar-icon {
-            height: 30px;
-            width: 30px;
-            border-radius: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: all .5s ease;
-            cursor: pointer;
-
-            & img {
-                transition: transform .5s ease;
-                aspect-ratio: 1/1;
-            }
-
-            &:hover {
-                background-color: rgb(211, 211, 211);
-            }
-        }
     }
 
     & .add-new-dialogue {

@@ -77,46 +77,7 @@ const submit = async () => {
                 width: 100%;
                 justify-content: center;
                 align-items: center;
-
                 gap: .5rem;
-
-                & .label {
-                    position: relative;
-                    padding-top: 20px;
-                    font-size: 20px;
-
-                    & .placeholder {
-                        position: absolute;
-                        left: 12px;
-                        font-size: 20px;
-                        top: calc(50% - 3px);
-                        transition: all 0.5s ease;
-                    }
-
-                    & input {
-                        border: none;
-                        appearance: none;
-                        padding: 12px;
-                        font-size: 20px;
-                        width: 100%;
-                        border-radius: .4rem .4rem 0 0;
-                        outline: none;
-                        background: linear-gradient(90deg, #222, #222) left bottom/0 2px no-repeat, linear-gradient(90deg, #ccc, #ccc) left bottom/100% 2px no-repeat, linear-gradient(90deg, #fafafa, #fafafa) left bottom/100% no-repeat;
-                        transition: all 0.5s ease;
-
-                        &:valid,
-                        &:focus {
-                            background-size: 100% 2px, 100% 2px, 100%;
-                        }
-
-                        &:valid+.placeholder,
-                        &:focus+.placeholder {
-                            top: 3px;
-                            font-size: 14px;
-                            color: #222;
-                        }
-                    }
-                }
             }
         }
 

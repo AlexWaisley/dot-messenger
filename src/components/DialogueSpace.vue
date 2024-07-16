@@ -32,11 +32,17 @@ const loadMoreMessages = () => {
     messengerInfo.getMessages(messengerInfo.currentChat, length, 20);
 }
 
-setInterval(async () => {
-    if (messengerInfo.currentChat.id !== 0) {
+const interval = setInterval(async () => {
+    if (messengerInfo.currentChat.id !== "") {
         await messengerInfo.getMessages(messengerInfo.currentChat, 0, 20);
     }
 }, 1000);
+
+const closeDialogue = () => {
+    displayInfo.closeDialogue();
+    clearInterval(interval);
+}
+
 </script>
 
 <template>
@@ -51,17 +57,17 @@ setInterval(async () => {
                         <span>{{ messengerInfo.currentChat.name }}</span>
                     </div>
                 </div>
-                <div @click="displayInfo.closeDialogue" class="back-btn">
+                <div @click="closeDialogue()" class="back-btn">
                     <img src="/add.svg" alt="Exit">
                 </div>
             </div>
             <div class="chat">
-                <div @click="loadMoreMessages()">Load messages</div>
-                <Chat :messages="currChatMesseges"></Chat>
+                <Chat :messages="currChatMesseges" @load="loadMoreMessages()"></Chat>
             </div>
             <div class="input-field">
                 <div class="input-container">
-                    <input type="text" v-model="message" placeholder="Write a message..." />
+                    <input v-on:keyup.enter="sendNewMessage()" type="text" v-model="message"
+                        placeholder="Write a message..." />
                 </div>
                 <div @click="sendNewMessage()" class="send-btn" :class="isTextInputed ? 'send' : ''">Send</div>
             </div>
@@ -70,12 +76,14 @@ setInterval(async () => {
 </template>
 
 <style scoped lang="scss">
+@import '../styles/variables.scss';
+
 .dialogue-container {
     display: flex;
     align-items: center;
     justify-content: center;
     overflow-y: auto;
-    background-color: #f4f4f4;
+    background-color: $background;
 
     & .dialogue {
         height: 100%;
@@ -84,7 +92,7 @@ setInterval(async () => {
         grid-template-rows: 5% 85% 10%;
 
         & .chat-header {
-            background-color: azure;
+            background-color: $panel;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -95,7 +103,7 @@ setInterval(async () => {
             & .back-btn {
                 position: absolute;
                 right: .2rem;
-                background-color: rgb(255, 0, 0);
+                background-color: $button-color;
                 border-radius: 50%;
                 width: 30px;
                 height: 30px;
@@ -109,10 +117,12 @@ setInterval(async () => {
                 & img {
                     height: 100%;
                     transform: rotate(45deg);
+                    filter: invert(100%);
                 }
 
                 &:hover {
-                    background-color: rgb(234, 234, 234);
+                    background-color: $button-color-hover;
+                    transform: rotate(90deg);
                 }
             }
         }
@@ -150,7 +160,7 @@ setInterval(async () => {
                 position: absolute;
                 right: .5rem;
                 bottom: 7rem;
-                background-color: rgb(247, 247, 247);
+                background-color: $button-color;
                 height: 4rem;
                 opacity: .9;
                 aspect-ratio: 1/1;
@@ -160,9 +170,10 @@ setInterval(async () => {
                 transition: all .2s ease;
                 border-radius: 50%;
                 transform: translate(200%);
+                box-shadow: #7a7a7a 0px 0px 7px;
 
                 &:hover {
-                    background-color: #e8e8e8;
+                    background-color: $button-color-hover;
                 }
             }
 

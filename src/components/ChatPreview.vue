@@ -8,7 +8,7 @@ const displayInfo = useDisplayInfoStorage();
 const messengerInfo = useMessengerInfoStorage();
 
 const props = defineProps<{
-    id: number,
+    id: string,
     name: string
 }>();
 
@@ -27,7 +27,7 @@ if (lastMessage.value !== undefined) {
         lastMessageTime.value = moment.unix(lastMessage.value.time).format('HH:MM');
     }
     else {
-        lastMessageTime.value = moment.unix(lastMessage.value.time).format("lll");
+        lastMessageTime.value = moment.unix(lastMessage.value.time).format("YYYY/MM/D");
     }
 }
 else {
@@ -42,7 +42,7 @@ watch(messengerInfo.messages, () => {
             lastMessageTime.value = moment.unix(lastMessage.value.time).format('HH:MM');
         }
         else {
-            lastMessageTime.value = moment.unix(lastMessage.value.time).format("lll");
+            lastMessageTime.value = moment.unix(lastMessage.value.time).format("YYYY/MM/D");
         }
     }
     else {
@@ -81,29 +81,29 @@ const openChat = async () => {
 </template>
 
 <style scoped lang="scss">
+@import '../styles/variables.scss';
+
 .chat-preview-container {
     display: flex;
     max-width: 100%;
-    height: 150px;
     transition: all .3s ease;
+    padding: 0.2rem .4rem;
     gap: .5rem;
-    border-radius: .5rem;
-
-    &:nth-child(even) {
-        background-color: bisque;
-    }
+    border-bottom: solid 1px $border-color;
+    cursor: pointer;
+    user-select: none;
 
     & .avatar-container {
         display: flex;
         height: 100px;
-        width: 20%;
+        width: 25%;
         justify-content: center;
 
         & .image-wrapper {
             height: 100%;
 
             & img {
-                height: 100%;
+                height: 100px;
                 max-width: 100%;
                 object-fit: contain;
             }
@@ -114,21 +114,27 @@ const openChat = async () => {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        width: 80%;
+        width: 75%;
 
         & .chat-info {
-            max-width: 100%;
+            height: 50%;
             padding: .1rem;
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
 
             & .last-message-info {
+                height: 25px;
+                width: 60px;
+                font-size: 12px;
                 display: flex;
-                flex-direction: column;
-                min-width: 40px;
+                justify-content: flex-end;
             }
 
             & .user-nick {
+                font-size: 14px;
+                width: 140px;
+                min-height: 25px;
                 overflow: hidden;
                 white-space: nowrap;
                 text-overflow: ellipsis;
@@ -136,12 +142,13 @@ const openChat = async () => {
         }
 
         & .last-message-container {
-            display: grid;
-            justify-content: space-between;
-            height: 40%;
+            display: flex;
+            align-items: center;
+            height: 50%;
             width: 100%;
 
             & .content {
+                width: 90%;
                 overflow: hidden;
                 white-space: nowrap;
                 text-overflow: ellipsis;
@@ -151,7 +158,7 @@ const openChat = async () => {
     }
 
     &:hover {
-        background-color: azure;
+        background-color: $hover-background;
     }
 }
 </style>

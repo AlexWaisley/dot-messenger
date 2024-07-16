@@ -1,4 +1,4 @@
 export type Chat = {
     name:string,
-    id:number
+    id:string
 };

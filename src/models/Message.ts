@@ -1,7 +1,7 @@
 export type Message = {
     content:string,
-    id:number,
-    userId:number,
-    chatId:number,
+    id:string,
+    userId:string,
+    chatId:string,
     time:number
 }
