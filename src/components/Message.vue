@@ -21,6 +21,7 @@ watch(() => props.message, () => {
     isCurrUserMessage.value = props.message.userId === messengerInfo.user.id;
 }, { immediate: true });
 
+
 </script>
 
 <template>
@@ -45,14 +46,14 @@ watch(() => props.message, () => {
 </template>
 
 <style scoped lang="scss">
-@import '../styles/variables.scss';
+@import '../styles/style.scss';
 
 .non-user-message {
     display: flex;
     transition: all .3s ease;
     align-items: flex-end;
     gap: 1rem;
-    background: $chat-opponent-message;
+    background: var(--chat-opponent-message);
     padding: .5rem;
     border-radius: .5rem;
 
@@ -105,7 +106,7 @@ watch(() => props.message, () => {
     transition: all .3s ease;
     align-items: flex-end;
     gap: 1rem;
-    background: $chat-user-message;
+    background: var(--chat-user-message);
     padding: .5rem;
     border-radius: .5rem;
 

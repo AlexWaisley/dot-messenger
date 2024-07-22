@@ -5,6 +5,7 @@ import { ref } from 'vue';
 
 const displayInfo = useDisplayInfoStorage();
 const messengerInfo = useMessengerInfoStorage();
+const currTheme = ref(displayInfo.currTheme);
 
 
 const chatName = ref("");
@@ -18,7 +19,7 @@ const submit = async () => {
 
 </script>
 <template>
-    <div class="container">
+    <div :class="currTheme()" class="container">
         <div class="new-chat-window">
             <div class="input-fields-container">
                 <div class="chat-name-field">
@@ -42,22 +43,25 @@ const submit = async () => {
     </div>
 </template>
 <style scoped lang="scss">
+@import '../styles/style.scss';
+
 .container {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.377);
+    background-color: rgba(0, 0, 0, 0.1);
     z-index: 3;
     display: grid;
     place-items: center;
     transition: all .5s ease;
+    color: var(--text-color);
 
     & .new-chat-window {
         width: max(50%, 400px);
         height: max(50%, 200px);
-        background-color: azure;
+        background-color: var(--background);
         border-radius: 5rem;
         display: grid;
         grid-template-rows: 4fr 1fr;
@@ -89,7 +93,6 @@ const submit = async () => {
 
             & .cancel-btn,
             & .submit-btn {
-                background-color: green;
                 height: 50%;
                 width: 40%;
                 display: flex;
@@ -101,6 +104,22 @@ const submit = async () => {
 
                 &:hover {
                     background-color: darkgreen;
+                }
+            }
+
+            & .cancel-btn {
+                background-color: #ff00002e;
+
+                &:hover {
+                    background-color: #8b00008c;
+                }
+            }
+
+            & .submit-btn {
+                background-color: #0080004d;
+
+                &:hover {
+                    background-color: #0064008c;
                 }
             }
         }

@@ -4,6 +4,7 @@ import { ref } from 'vue';
 
 const displayInfo = useDisplayInfoStorage();
 const messengerInfo = useMessengerInfoStorage();
+const currTheme = ref(displayInfo.currTheme);
 
 const login = ref("");
 const password = ref("");
@@ -25,7 +26,7 @@ const register = async () => {
 }
 </script>
 <template>
-    <div v-if="!displayInfo.isLoading" class="entry-page">
+    <div v-if="!displayInfo.isLoading" :class="currTheme()" class="entry-page">
         <div class="login-block">
             <div class="input-fields">
                 <label class="label">
@@ -55,14 +56,15 @@ const register = async () => {
 
 
 <style scoped lang="scss">
-@import '../styles/variables.scss';
+@import '../styles/style.scss';
 
 .entry-page {
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: $background;
+    background-color: var(--background);
+    color: var(--text-color);
 
     & .login-block {
         display: flex;
@@ -83,9 +85,9 @@ const register = async () => {
 
             & button {
                 padding: .5rem;
-                background: $button-color;
+                background: var(--button-color);
                 border: none;
-                color: $text-color;
+                color: var(--text-color);
                 font-size: 17px;
                 font-weight: 500;
                 text-transform: uppercase;
@@ -95,7 +97,7 @@ const register = async () => {
                 transition: all .5s ease;
 
                 &:hover {
-                    background: $button-color-hover;
+                    background: var(--button-color-hover);
                 }
             }
         }

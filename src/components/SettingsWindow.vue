@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useDisplayInfoStorage } from "../storage/displayInfo";
 
+
 const displayInfo = useDisplayInfoStorage();
 
 </script>
@@ -15,7 +16,8 @@ const displayInfo = useDisplayInfoStorage();
             </div>
             <div class="options-cover">
                 <div class="settings">
-                    <div class="option"></div>
+                    <div class="option">
+                    </div>
                 </div>
             </div>
         </div>

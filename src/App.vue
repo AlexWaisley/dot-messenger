@@ -4,6 +4,7 @@ import EntryPage from './components/EntryPage.vue';
 import { useDisplayInfoStorage, useMessengerInfoStorage } from './storage';
 import { onMounted } from 'vue';
 
+
 const displayInfo = useDisplayInfoStorage();
 const messengerInfo = useMessengerInfoStorage();
 

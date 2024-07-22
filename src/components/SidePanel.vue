@@ -7,6 +7,7 @@ import { useDisplayInfoStorage, useMessengerInfoStorage } from "../storage";
 
 const displayInfo = useDisplayInfoStorage();
 const messengerInfo = useMessengerInfoStorage();
+const currTheme = ref(displayInfo.currTheme);
 
 const isOpenSearchBar = ref(false);
 const searchChat = ref("");
@@ -21,14 +22,14 @@ const doSearch = () => {
 </script>
 
 <template>
-    <div class="side-panel-container">
+    <div :class="currTheme()" class="side-panel-container">
         <div :class="isOpenSearchBar ? 'search-bar-on' : 'search-bar-off'" class="head">
             <div class="navigation ">
                 <div class="logo">
                     <img src="/05059.jpg" alt="Logo">
                 </div>
                 <div @click="changeSearchBarStatus()" class="search-bar-icon">
-                    <img src="/search-icon.svg" alt="search">
+                    <img :src="'/search-icon.svg'" alt="search">
                 </div>
                 <div @click="displayInfo.openSettings" class="settings-icon">
                     <img src="/settings-icon.svg" alt="search">
@@ -57,7 +58,7 @@ const doSearch = () => {
 </template>
 
 <style scoped lang="scss">
-@import '../styles/variables.scss';
+@import '../styles/style.scss';
 
 .close {
     transform: translateY(-100%);
@@ -73,20 +74,20 @@ const doSearch = () => {
     height: 100%;
     overflow-y: auto;
     grid-template-rows: max(5%, 100px) min(95%, calc(100vh - 110px));
-    background-color: $panel;
+    background-color: var(--panel);
     position: relative;
     transition: all .5s ease;
     z-index: 2;
-    background-color: $panel;
+    color: var(--text-color);
 
     & .search-bar-on {
+        display: grid;
+        transition: all .5s ease;
+        gap: 4%;
+
         & .navigation {
             height: 65%;
         }
-
-        grid-template-rows: 65% 30%;
-        transition: all .5s ease;
-        gap: 4%;
 
         & .search-bar {
             & input {
@@ -98,14 +99,15 @@ const doSearch = () => {
     }
 
     & .search-bar-off {
+        grid-template-rows: 100%;
+        transition: all .5s ease;
+
         & .navigation {
             height: 100%;
         }
 
-        grid-template-rows: 100%;
-        transition: all .5s ease;
-
         & .search-bar {
+
             & input {
                 border: none;
                 outline: none;
@@ -143,6 +145,7 @@ const doSearch = () => {
 
                 & img {
                     transition: all .5s ease;
+                    fill: var(--text-color);
                     aspect-ratio: 1/1;
                     height: 60%;
                 }
@@ -191,6 +194,7 @@ const doSearch = () => {
 
                 & img {
                     transition: transform .5s ease;
+                    color: #fff;
                     aspect-ratio: 1/1;
                 }
 

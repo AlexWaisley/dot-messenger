@@ -6,6 +6,7 @@ import { useDisplayInfoStorage, useMessengerInfoStorage } from "../storage";
 
 const displayInfo = useDisplayInfoStorage();
 const messengerInfo = useMessengerInfoStorage();
+const currTheme = ref(displayInfo.currTheme);
 
 const isTextInputed = ref(false);
 const message = ref("");
@@ -46,7 +47,7 @@ const closeDialogue = () => {
 </script>
 
 <template>
-    <div class="dialogue-container">
+    <div :class="currTheme()" class="dialogue-container">
         <div v-if="!displayInfo.isDialogueOpen" class="no-dialogue">
             No dialogue picked
         </div>
@@ -76,14 +77,15 @@ const closeDialogue = () => {
 </template>
 
 <style scoped lang="scss">
-@import '../styles/variables.scss';
+@import '../styles/style.scss';
 
 .dialogue-container {
     display: flex;
     align-items: center;
     justify-content: center;
     overflow-y: auto;
-    background-color: $background;
+    background-color: var(--background);
+    color: var(--text-color);
 
     & .dialogue {
         height: 100%;
@@ -92,7 +94,7 @@ const closeDialogue = () => {
         grid-template-rows: 5% 85% 10%;
 
         & .chat-header {
-            background-color: $panel;
+            background-color: var(--panel);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -103,7 +105,7 @@ const closeDialogue = () => {
             & .back-btn {
                 position: absolute;
                 right: .2rem;
-                background-color: $button-color;
+                background-color: var(--button-color);
                 border-radius: 50%;
                 width: 30px;
                 height: 30px;
@@ -121,7 +123,7 @@ const closeDialogue = () => {
                 }
 
                 &:hover {
-                    background-color: $button-color-hover;
+                    background-color: var(--button-color-hover);
                     transform: rotate(90deg);
                 }
             }
@@ -160,7 +162,7 @@ const closeDialogue = () => {
                 position: absolute;
                 right: .5rem;
                 bottom: 7rem;
-                background-color: $button-color;
+                background-color: var(--button-color);
                 height: 4rem;
                 opacity: .9;
                 aspect-ratio: 1/1;
@@ -173,7 +175,7 @@ const closeDialogue = () => {
                 box-shadow: #7a7a7a 0px 0px 7px;
 
                 &:hover {
-                    background-color: $button-color-hover;
+                    background-color: var(--button-color-hover);
                 }
             }
 

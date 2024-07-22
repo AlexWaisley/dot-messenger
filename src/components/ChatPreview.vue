@@ -6,6 +6,7 @@ import moment from 'moment';
 
 const displayInfo = useDisplayInfoStorage();
 const messengerInfo = useMessengerInfoStorage();
+const currTheme = ref(displayInfo.currTheme);
 
 const props = defineProps<{
     id: string,
@@ -60,7 +61,7 @@ const openChat = async () => {
 </script>
 
 <template>
-    <div @click="openChat" class="chat-preview-container">
+    <div @click="openChat" :class="currTheme()" class="chat-preview-container">
         <div class="avatar-container">
             <div class="image-wrapper">
                 <img src="/04856.jpg" alt="someImg">
@@ -81,22 +82,24 @@ const openChat = async () => {
 </template>
 
 <style scoped lang="scss">
-@import '../styles/variables.scss';
+@import '../styles/style.scss';
 
 .chat-preview-container {
-    display: flex;
+    display: grid;
+    grid-template-columns: 25% 75%;
     max-width: 100%;
     transition: all .3s ease;
     padding: 0.2rem .4rem;
     gap: .5rem;
-    border-bottom: solid 1px $border-color;
+    border-bottom: solid 1px var(--border-color);
     cursor: pointer;
     user-select: none;
+    color: var(--text-color);
 
     & .avatar-container {
         display: flex;
         height: 100px;
-        width: 25%;
+        width: 100%;
         justify-content: center;
 
         & .image-wrapper {
@@ -114,7 +117,7 @@ const openChat = async () => {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        width: 75%;
+        width: 95%;
 
         & .chat-info {
             height: 50%;
@@ -133,7 +136,7 @@ const openChat = async () => {
 
             & .user-nick {
                 font-size: 14px;
-                width: 140px;
+                width: calc(95% - 60px);
                 min-height: 25px;
                 overflow: hidden;
                 white-space: nowrap;
@@ -158,7 +161,7 @@ const openChat = async () => {
     }
 
     &:hover {
-        background-color: $hover-background;
+        background-color: var(--hover-background);
     }
 }
 </style>
