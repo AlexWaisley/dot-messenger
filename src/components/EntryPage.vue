@@ -4,7 +4,6 @@ import { ref } from 'vue';
 
 const displayInfo = useDisplayInfoStorage();
 const messengerInfo = useMessengerInfoStorage();
-const currTheme = ref(displayInfo.currTheme);
 
 const login = ref("");
 const password = ref("");
@@ -24,9 +23,10 @@ const register = async () => {
     }
     displayInfo.loadingStatusChange();
 }
+
 </script>
 <template>
-    <div v-if="!displayInfo.isLoading" :class="currTheme()" class="entry-page">
+    <div v-if="!displayInfo.isLoading" class="entry-page">
         <div class="login-block">
             <div class="input-fields">
                 <label class="label">
@@ -56,8 +56,6 @@ const register = async () => {
 
 
 <style scoped lang="scss">
-@import '../styles/style.scss';
-
 .entry-page {
     height: 100%;
     display: flex;

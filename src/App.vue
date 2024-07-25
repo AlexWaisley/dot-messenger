@@ -12,6 +12,10 @@ onMounted(async () => {
   if (await messengerInfo.checkUserLogedIn()) {
     displayInfo.loggedIn();
   }
+  const theme = localStorage.getItem('theme');
+  if (theme !== null) {
+    displayInfo.changeTheme(JSON.parse(theme));
+  }
 })
 
 </script>
@@ -21,4 +25,4 @@ onMounted(async () => {
   <Main v-else></Main>
 </template>
 
-<style scoped></style>
+<style></style>

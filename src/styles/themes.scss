@@ -16,6 +16,37 @@ $pink-light: (
 $pink-dark: (
     bckg-color: #2F1D24,
     chat-background: #3A2933,
+    hover-background: #b05b79,
+    chat-user-message: #8D4F76,
+    chat-opponent-message: #3D2935,
+    panel: #3A2933,
+    button-color: #7d4468,
+    button-color-hover: #643553,
+    text-color: #fff,
+    border-color: #2F1D24,
+    scroll-color: #b05b79,
+    scroll-color-hover: #90566c,
+    blacky:true,
+);
+
+$green-light: (
+    bckg-color: #E5C5D0,
+    chat-background: #FFEAF1,
+    hover-background: #DF98B2,
+    chat-user-message: #CC79A1,
+    chat-opponent-message: #FFEAF1,
+    panel: #FFEAF1,
+    button-color: #C26287,
+    button-color-hover: #b25277,
+    text-color: #000,
+    border-color: #ff8fbb,
+    scroll-color: #DF98B2,
+    scroll-color-hover: #b5708a
+);
+
+$green-dark: (
+    bckg-color: #2F1D24,
+    chat-background: #3A2933,
     hover-background: #D884A2,
     chat-user-message: #8D4F76,
     chat-opponent-message: #3D2935,
@@ -25,7 +56,8 @@ $pink-dark: (
     text-color: #fff,
     border-color: #2F1D24,
     scroll-color: #D884A2,
-    scroll-color-hover: #90566c
+    scroll-color-hover: #90566c,
+    blacky:true,
 );
 
 $blue-light: (
@@ -45,17 +77,18 @@ $blue-light: (
 
 $blue-dark: (
     bckg-color: #132121,
-    chat-background: #233539,
-    hover-background: #4AA0B4,
-    chat-user-message: #2E7B8D,
-    chat-opponent-message: #233539,
-    panel: #233539,
-    button-color: #11C0F5,
-    button-color-hover: #0ea2d0,
+    chat-background: #232e39,
+    hover-background: #284990,
+    chat-user-message: #2e5a8d,
+    chat-opponent-message: #232639,
+    panel: #232c39,
+    button-color: #2168c0,
+    button-color-hover: #1e5597,
     text-color: #fff,
     border-color: #4AA0B4,
-    scroll-color: #4AA0B4,
-    scroll-color-hover: #3b8696
+    scroll-color: #284990,
+    scroll-color-hover: #20376b,
+    blacky:true,
 );
 
 $wb-light: (
@@ -83,10 +116,12 @@ $wb-dark: (
     button-color: #A9A9A9,
     button-color-hover: #191919,
     text-color: #fff,
+    blacky:true,
     border-color: #2F1D24,
     scroll-color: #2F1D24,
     scroll-color-hover: #22151a
 );
+
 
 @mixin theme($theme-map) {
     $background: map-get($theme-map, bckg-color);
@@ -115,4 +150,26 @@ $wb-dark: (
     --scroll-color:#{$scroll-color};
     --scroll-color-hover:#{$scroll-color-hover};
 
+    @if map-get($theme-map, blacky) {
+        *[data-icon] {
+            filter: invert(1);
+        }
+    }
+}
+
+$themes: (
+    "pink-light": $pink-light,
+    "blue-light": $blue-light,
+    "green-light": $green-light,
+    "wb-light": $wb-light,
+    "pink-dark": $pink-dark,
+    "blue-dark": $blue-dark,
+    "green-dark": $green-dark,
+    "wb-dark": $wb-dark
+);
+
+@each $name, $value in $themes {
+    :root[data-selected-theme=#{$name}] {
+        @include theme($value);
+    }
 }

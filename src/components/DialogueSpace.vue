@@ -6,8 +6,9 @@ import { useDisplayInfoStorage, useMessengerInfoStorage } from "../storage";
 
 const displayInfo = useDisplayInfoStorage();
 const messengerInfo = useMessengerInfoStorage();
-const currTheme = ref(displayInfo.currTheme);
+const chatName = ref(messengerInfo.currentChat.name);
 
+const isEdit = ref(false);
 const isTextInputed = ref(false);
 const message = ref("");
 const currChatMesseges = ref(messengerInfo.messages.filter((element) => element.chatId === messengerInfo.currentChat.id));
@@ -17,6 +18,7 @@ watch(() => message.value, () => {
 
 watch(() => messengerInfo.currentChat.id, () => {
     currChatMesseges.value = messengerInfo.messages.filter((element) => element.chatId === messengerInfo.currentChat.id);
+    chatName.value = messengerInfo.currentChat.name;
 }, { immediate: true })
 
 watch(messengerInfo.messages, () => {
@@ -30,36 +32,35 @@ const sendNewMessage = () => {
 
 const loadMoreMessages = () => {
     const length = messengerInfo.messages.filter((element) => element.chatId === messengerInfo.currentChat.id).length;
-    messengerInfo.getMessages(messengerInfo.currentChat, length, 20);
+    messengerInfo.getMessages(length, 20);
 }
-
-const interval = setInterval(async () => {
-    if (messengerInfo.currentChat.id !== "") {
-        await messengerInfo.getMessages(messengerInfo.currentChat, 0, 20);
-    }
-}, 1000);
 
 const closeDialogue = () => {
     displayInfo.closeDialogue();
-    clearInterval(interval);
+    messengerInfo.currentChat.id = "0";
+}
+
+const updateChatName = async () => {
+    isEdit.value = false;
+    if (messengerInfo.currentChat.name !== chatName.value)
+        await messengerInfo.updateChatName(chatName.value);
 }
 
 </script>
 
 <template>
-    <div :class="currTheme()" class="dialogue-container">
+    <div class="dialogue-container">
         <div v-if="!displayInfo.isDialogueOpen" class="no-dialogue">
             No dialogue picked
         </div>
         <div v-else class="dialogue">
             <div class="chat-header">
-                <div class="person">
-                    <div class="nickname">
-                        <span>{{ messengerInfo.currentChat.name }}</span>
-                    </div>
+                <div class="chat-info">
+                    <input type="text" v-model="chatName" class="chat-name" :class="isEdit ? 'edit' : ''"
+                        @focus="isEdit = true" @blur="updateChatName">
                 </div>
                 <div @click="closeDialogue()" class="back-btn">
-                    <img src="/add.svg" alt="Exit">
+                    <img data-icon src="/add.svg" alt="Exit">
                 </div>
             </div>
             <div class="chat">
@@ -77,8 +78,6 @@ const closeDialogue = () => {
 </template>
 
 <style scoped lang="scss">
-@import '../styles/style.scss';
-
 .dialogue-container {
     display: flex;
     align-items: center;
@@ -101,6 +100,30 @@ const closeDialogue = () => {
             font-weight: 600;
             font-size: 1.5rem;
             padding: 0 .5rem;
+
+            & .chat-info {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: calc(100% - 80px);
+
+                & .chat-name {
+                    background-color: var(--panel);
+                    outline: none;
+                    width: 100%;
+                    border: none;
+                    text-align: center;
+
+                    font-size: 2rem;
+                    border-radius: 1.5rem;
+                    transition: all .5s ease;
+                    border: 1px solid transparent;
+
+                    &:focus {
+                        border: 1px solid var(--button-color);
+                    }
+                }
+            }
 
             & .back-btn {
                 position: absolute;
@@ -155,10 +178,11 @@ const closeDialogue = () => {
                     width: 100%;
                     outline: none;
                     border: 0;
+                    background-color: var(--panel);
                 }
             }
 
-            .send-btn {
+            & .send-btn {
                 position: absolute;
                 right: .5rem;
                 bottom: 7rem;
@@ -172,7 +196,7 @@ const closeDialogue = () => {
                 transition: all .2s ease;
                 border-radius: 50%;
                 transform: translate(200%);
-                box-shadow: #7a7a7a 0px 0px 7px;
+                box-shadow: var(--button-color-hover) 0px 0px 7px;
 
                 &:hover {
                     background-color: var(--button-color-hover);

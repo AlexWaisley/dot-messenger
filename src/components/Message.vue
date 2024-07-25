@@ -12,12 +12,13 @@ const props = defineProps<{
 }>();
 
 const currMessage = ref(props.message);
-const messageTime = ref(moment.unix(props.message.time).format("HH:MM:ss"));
+const messageTime = ref(moment.unix(props.message.time).format("HH:mm:ss"));
 const isCurrUserMessage = ref(props.message.userId === messengerInfo.user.id);
+
 
 watch(() => props.message, () => {
     currMessage.value = props.message;
-    messageTime.value = moment.unix(props.message.time).format("HH:MM:ss");
+    messageTime.value = moment.unix(props.message.time).format("HH:mm:ss");
     isCurrUserMessage.value = props.message.userId === messengerInfo.user.id;
 }, { immediate: true });
 
@@ -46,8 +47,6 @@ watch(() => props.message, () => {
 </template>
 
 <style scoped lang="scss">
-@import '../styles/style.scss';
-
 .non-user-message {
     display: flex;
     transition: all .3s ease;

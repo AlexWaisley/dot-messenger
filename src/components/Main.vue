@@ -13,7 +13,7 @@ const displayInfo = useDisplayInfoStorage();
 
         <div v-else class="hover-me">
             <div class="img-container">
-                <img src="/Arrow-bar-right.svg" alt="To right">
+                <img data-icon src="/Arrow-bar-right.svg" alt="To right">
             </div>
             <div class="side-panel">
                 <SidePanel> </SidePanel>

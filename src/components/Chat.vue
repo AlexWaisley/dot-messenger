@@ -53,9 +53,10 @@ const startLoading = () => {
         cursor: pointer;
         outline: none;
         border: none;
+        background-color: var(--button-color);
 
         &:hover {
-            background-color: #dedede
+            background-color: var(--button-color-hover);
         }
     }
 

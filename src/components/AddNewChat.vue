@@ -5,7 +5,6 @@ import { ref } from 'vue';
 
 const displayInfo = useDisplayInfoStorage();
 const messengerInfo = useMessengerInfoStorage();
-const currTheme = ref(displayInfo.currTheme);
 
 
 const chatName = ref("");
@@ -16,10 +15,9 @@ const submit = async () => {
     messengerInfo.getUserChats();
     displayInfo.closeNewDialogueWindow();
 }
-
 </script>
 <template>
-    <div :class="currTheme()" class="container">
+    <div class="container">
         <div class="new-chat-window">
             <div class="input-fields-container">
                 <div class="chat-name-field">
@@ -43,8 +41,6 @@ const submit = async () => {
     </div>
 </template>
 <style scoped lang="scss">
-@import '../styles/style.scss';
-
 .container {
     position: absolute;
     top: 0;
@@ -101,10 +97,6 @@ const submit = async () => {
                 border-radius: .5rem;
                 cursor: pointer;
                 transition: all .5s ease;
-
-                &:hover {
-                    background-color: darkgreen;
-                }
             }
 
             & .cancel-btn {

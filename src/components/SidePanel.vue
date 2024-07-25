@@ -7,7 +7,6 @@ import { useDisplayInfoStorage, useMessengerInfoStorage } from "../storage";
 
 const displayInfo = useDisplayInfoStorage();
 const messengerInfo = useMessengerInfoStorage();
-const currTheme = ref(displayInfo.currTheme);
 
 const isOpenSearchBar = ref(false);
 const searchChat = ref("");
@@ -19,30 +18,31 @@ const changeSearchBarStatus = () => {
 const doSearch = () => {
     messengerInfo.updateDisplayedChats(searchChat.value);
 }
+
 </script>
 
 <template>
-    <div :class="currTheme()" class="side-panel-container">
+    <div class="side-panel-container">
         <div :class="isOpenSearchBar ? 'search-bar-on' : 'search-bar-off'" class="head">
             <div class="navigation ">
                 <div class="logo">
                     <img src="/05059.jpg" alt="Logo">
                 </div>
                 <div @click="changeSearchBarStatus()" class="search-bar-icon">
-                    <img :src="'/search-icon.svg'" alt="search">
+                    <img data-icon :src="'/search-icon.svg'" alt="search">
                 </div>
                 <div @click="displayInfo.openSettings" class="settings-icon">
-                    <img src="/settings-icon.svg" alt="search">
+                    <img data-icon src="/settings-icon.svg" alt="search">
                 </div>
                 <div @click="displayInfo.sidePanelChange" :class="!displayInfo.isMainWithSidePanel ? 'left' : 'right'"
                     class="hide-button-icon">
-                    <img src="/hide-button.svg" alt="Hide/Fix">
+                    <img data-icon src="/hide-button.svg" alt="Hide/Fix">
                 </div>
             </div>
             <div class="search-bar">
                 <input type="text" v-on:keyup.enter="doSearch()" v-model="searchChat" placeholder="Write chat name...">
                 <div @click="doSearch()" class="icon">
-                    <img src="/search-icon.svg" alt="search">
+                    <img data-icon src="/search-icon.svg" alt="search">
                 </div>
             </div>
         </div>
@@ -50,7 +50,7 @@ const doSearch = () => {
             <ChatsList></ChatsList>
         </div>
         <div @click="displayInfo.addNewDialogue" class="add-new-dialogue">
-            <img src="/add.svg" alt="add">
+            <img data-icon src="/add.svg" alt="add">
         </div>
     </div>
     <AddNewChat :class="displayInfo.isAddNewChat ? 'open' : 'close'"></AddNewChat>
@@ -58,8 +58,6 @@ const doSearch = () => {
 </template>
 
 <style scoped lang="scss">
-@import '../styles/style.scss';
-
 .close {
     transform: translateY(-100%);
 }
@@ -235,7 +233,7 @@ const doSearch = () => {
         align-content: center;
         justify-content: center;
         border-radius: 50%;
-        background-color: rgba(255, 255, 255);
+        background-color: var(--button-color-hover);
         padding: 1rem;
         bottom: 1rem;
         right: 1rem;

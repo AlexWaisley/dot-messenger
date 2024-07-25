@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
-import { Themes } from "../models";
+import { ref, watch } from "vue";
+import { Themes, ThemeType } from "../models";
+
 
 export const useDisplayInfoStorage = defineStore('displayInfo', () => {
     const isUserLoggedIn = ref(false);
@@ -9,18 +10,24 @@ export const useDisplayInfoStorage = defineStore('displayInfo', () => {
     const isMainWithSidePanel = ref(true);
     const isAddNewChat = ref(false);
     const isSettingsOpen = ref(false);
-    const currTheme = ref(Themes.BlueLight);
+    const currTheme = ref<ThemeType>(Themes['BlueLight']);
 
     const openSettings = () => {
         isSettingsOpen.value = true;
     }
 
-    const changeTheme = (newTheme: Themes) => {
+    watch(currTheme, (value) => {
+        document.documentElement.setAttribute("data-selected-theme", value)
+    }, { immediate: true });
+
+    const changeTheme = (newTheme: ThemeType) => {
         currTheme.value = newTheme;
+        localStorage.setItem('theme', JSON.stringify(currTheme.value));
     }
 
     const closeDialogue = () => {
         isDialogueOpen.value = false;
+        isMainWithSidePanel.value = true;
     }
     const closeSettings = () => {
         isSettingsOpen.value = false;
@@ -52,34 +59,7 @@ export const useDisplayInfoStorage = defineStore('displayInfo', () => {
         isMainWithSidePanel.value = !isMainWithSidePanel.value;
     }
 
-    const themeConverter = (): string => {
-        switch (currTheme.value) {
-            case Themes.PinkLight: {
-                return "pink-light"
-            }
-            case Themes.PinkDark: {
-                return "pink-dark"
-            }
-            case Themes.BlueLight: {
-                return "blue-light"
-            }
-            case Themes.BlueDark: {
-                return "blue-dark"
-            }
-            case Themes.WBLight: {
-                return "wb-light"
-            }
-            case Themes.WBDark: {
-                return "wb-dark"
-            }
-            default: {
-                return "Bruh broken";
-            }
-        }
-
-    }
-
     return {
-        loggedIn, isUserLoggedIn, isLoading, loadingStatusChange, closeDialogue, openDialogue, isDialogueOpen, isMainWithSidePanel, sidePanelChange, isAddNewChat, addNewDialogue, closeNewDialogueWindow, openSettings, isSettingsOpen, closeSettings, changeTheme, currTheme: themeConverter
+        loggedIn, isUserLoggedIn, isLoading, loadingStatusChange, closeDialogue, openDialogue, isDialogueOpen, isMainWithSidePanel, sidePanelChange, isAddNewChat, addNewDialogue, closeNewDialogueWindow, openSettings, isSettingsOpen, closeSettings, changeTheme, currTheme
     }
 })

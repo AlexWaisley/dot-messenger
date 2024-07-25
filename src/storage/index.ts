@@ -1,4 +1,4 @@
 import { useDisplayInfoStorage } from "./displayInfo";
-import { useMessengerInfoStorage } from "./userInfo";
+import { useMessengerInfoStorage } from "./messengerInfo";
 
-export {useDisplayInfoStorage, useMessengerInfoStorage};
+export { useDisplayInfoStorage, useMessengerInfoStorage };

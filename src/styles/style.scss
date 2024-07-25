@@ -1,35 +1,10 @@
 @import './themes.scss';
 
-.pink-light {
-  @include theme($pink-light);
-}
-
-.pink-dark {
-  @include theme($pink-dark);
-}
-
-.blue-light {
-  @include theme($blue-light);
-}
-
-.blue-dark {
-  @include theme($blue-dark);
-}
-
-.wb-light {
-  @include theme($wb-light);
-}
-
-.wb-dark {
-  @include theme($wb-dark);
-}
-
-
-
 * {
   margin: 0;
   padding: 0;
   font-family: "Nunito", sans-serif;
+  color: var(--text-color)
 }
 
 $infinite-animation: 2s linear infinite;
@@ -39,13 +14,16 @@ $infinite-animation: 2s linear infinite;
   padding-top: 20px;
   font-size: 20px;
 
+  & .wrong {
+    border: red solid 2px;
+  }
+
   & .placeholder {
     position: absolute;
     left: 12px;
     font-size: 20px;
     top: calc(50% - 3px);
     transition: all 0.5s ease;
-    color: #222
   }
 
   & input {
@@ -56,7 +34,7 @@ $infinite-animation: 2s linear infinite;
     max-width: 100%;
     border-radius: .4rem .4rem 0 0;
     outline: none;
-    background: linear-gradient(90deg, #222, #222) left bottom/0 2px no-repeat, linear-gradient(90deg, #ccc, #ccc) left bottom/100% 2px no-repeat, linear-gradient(90deg, #fafafa, #fafafa) left bottom/100% no-repeat;
+    background: linear-gradient(90deg, #222, #222) left bottom/0 2px no-repeat, linear-gradient(90deg, var(--background), var(--background)) left bottom/100% 2px no-repeat, linear-gradient(90deg, var(--background), var(--background)) left bottom/100% no-repeat;
     transition: all 0.5s ease;
 
     &:valid,
@@ -89,7 +67,7 @@ body,
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: var(--panel);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -121,9 +99,9 @@ body,
 }
 
 .loader {
-  border: 5px solid #f3f3f3;
+  border: 5px solid --panel;
   border-radius: 50%;
-  border-top: 5px solid #e690a8;
+  border-top: 5px solid var(--scroll-color);
   width: 120px;
   height: 120px;
   -webkit-animation: spin $infinite-animation;
