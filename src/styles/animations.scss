@@ -1,0 +1,48 @@
+$infinite-animation: 2s linear infinite;
+
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes drop {
+    0% {
+        transform: translateX(-200px) scaleY(0.9);
+    }
+
+    5% {
+        opacity: 0.7;
+    }
+
+    50% {
+        transform: translateX(0) scaleY(1);
+        opacity: 1;
+    }
+
+    65% {
+        transform: translateX(-17px) scaleY(0.9);
+    }
+
+    75% {
+        transform: translateX(-22px) scaleY(0.9);
+    }
+
+    100% {
+        transform: translateX(0) scaleY(1);
+    }
+}

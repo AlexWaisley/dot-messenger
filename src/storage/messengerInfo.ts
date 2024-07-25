@@ -35,7 +35,6 @@ export const useMessengerInfoStorage = defineStore('messengerInfo', () => {
                 if (jsonuser !== null) {
                     user.value = JSON.parse(jsonuser);
                     contacts.value = JSON.parse(jsoncontacts);
-                    await getUserChats();
                     await updateInfo();
                     return true;
                 }
@@ -56,13 +55,12 @@ export const useMessengerInfoStorage = defineStore('messengerInfo', () => {
         if (tempUser !== null) {
             user.value = tempUser;
             const expiredDate = moment().unix() + 3600;
-            await getUserChats();
+            await updateInfo();
             localStorage.setItem("user", JSON.stringify(user.value));
             localStorage.setItem("contacts", JSON.stringify(contacts.value));
             localStorage.setItem("loginexpired", JSON.stringify(expiredDate));
 
             waiting();
-
 
             return true;
         }
@@ -120,15 +118,15 @@ export const useMessengerInfoStorage = defineStore('messengerInfo', () => {
         await api.ChangeChatName(user.value, currentChat.value);
     }
 
-    const addNewChat = async (inpUser: User = user.value, chatForm: ChatDto) => {
-        const result = await api.AddChat(inpUser, chatForm);
+    const addNewChat = async (chatForm: ChatDto) => {
+        const result = await api.AddChat(user.value, chatForm);
         if (result !== null) {
             await getUserChats();
         }
     }
 
-    const addMessageToChat = async (messageForm: MessageDto, inpUser: User = user.value, inpChat: Chat = currentChat.value) => {
-        const result = await api.AddMessage(inpUser, inpChat, messageForm);
+    const addMessageToChat = async (messageForm: MessageDto) => {
+        const result = await api.AddMessage(user.value, currentChat.value, messageForm);
         if (result !== null) {
             await getMessages(0, 1);
         }
@@ -148,7 +146,7 @@ export const useMessengerInfoStorage = defineStore('messengerInfo', () => {
         const contact = contacts.value.find(x => x.id === id);
         if (contact !== undefined)
             return contact.login;
-        return "";
+        return "No contact with this id";
     }
 
     return {

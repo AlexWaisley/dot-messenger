@@ -122,7 +122,6 @@ $wb-dark: (
     scroll-color-hover: #22151a
 );
 
-
 @mixin theme($theme-map) {
     $background: map-get($theme-map, bckg-color);
     $chat-background: map-get($theme-map, chat-background);
@@ -170,6 +169,10 @@ $themes: (
 
 @each $name, $value in $themes {
     :root[data-selected-theme=#{$name}] {
+        @include theme($value);
+    }
+
+    div[data-selected-theme=#{$name}] {
         @include theme($value);
     }
 }

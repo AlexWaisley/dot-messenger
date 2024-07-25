@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useDisplayInfoStorage, useMessengerInfoStorage } from '../storage';
 import { ref } from 'vue';
+import InputField from './InputField.vue';
 
 const displayInfo = useDisplayInfoStorage();
 const messengerInfo = useMessengerInfoStorage();
@@ -29,23 +30,12 @@ const register = async () => {
     <div v-if="!displayInfo.isLoading" class="entry-page">
         <div class="login-block">
             <div class="input-fields">
-                <label class="label">
-                    <input v-model="login" type="text" v-on:keyup.enter="logIn()" required>
-                    <span class="placeholder">Nickname:</span>
-                </label>
-                <label class="label">
-                    <input v-model="password" v-on:keyup.enter="logIn()" type="password" required>
-                    <span class="placeholder">Password:</span>
-                </label>
+                <InputField placeholder="Nickname" type="text" :func="logIn" v-model:inputModel="login" />
+                <InputField placeholder="Password" type="password" :func="logIn" v-model:inputModel="password" />
             </div>
-
             <div class="submit-btns">
-                <div class="register btn">
-                    <button type="button" @click="register">Register</button>
-                </div>
-                <div class="login btn">
-                    <button type="button" @click="logIn">Login</button>
-                </div>
+                <button type="button" @click="register">Register</button>
+                <button type="button" @click="logIn">Login</button>
             </div>
         </div>
     </div>
@@ -56,13 +46,14 @@ const register = async () => {
 
 
 <style scoped lang="scss">
+@import '../styles/animations.scss';
+
 .entry-page {
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: var(--background);
-    color: var(--text-color);
 
     & .login-block {
         display: flex;
@@ -79,25 +70,6 @@ const register = async () => {
             display: flex;
             width: 100%;
             justify-content: space-between;
-
-
-            & button {
-                padding: .5rem;
-                background: var(--button-color);
-                border: none;
-                color: var(--text-color);
-                font-size: 17px;
-                font-weight: 500;
-                text-transform: uppercase;
-                letter-spacing: 1px;
-                cursor: pointer;
-                border-radius: .4rem;
-                transition: all .5s ease;
-
-                &:hover {
-                    background: var(--button-color-hover);
-                }
-            }
         }
     }
 }
@@ -106,5 +78,17 @@ const register = async () => {
     height: 100%;
     display: grid;
     place-items: center;
+    background-color: var(--background);
+
+
+    .loader {
+        border: 5px solid --panel;
+        border-radius: 50%;
+        border-top: 5px solid var(--scroll-color);
+        width: 120px;
+        height: 120px;
+        -webkit-animation: spin $infinite-animation;
+        animation: spin $infinite-animation;
+    }
 }
 </style>

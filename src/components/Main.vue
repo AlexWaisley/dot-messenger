@@ -12,11 +12,11 @@ const displayInfo = useDisplayInfoStorage();
         </SidePanel>
 
         <div v-else class="hover-me">
-            <div class="img-container">
-                <img data-icon src="/Arrow-bar-right.svg" alt="To right">
-            </div>
             <div class="side-panel">
                 <SidePanel> </SidePanel>
+            </div>
+            <div class="img-container">
+                <img data-icon src="/Arrow-bar-right.svg" alt="To right">
             </div>
         </div>
         <DialogueSpace class="dialogue-space"></DialogueSpace>
@@ -27,7 +27,6 @@ const displayInfo = useDisplayInfoStorage();
 .main-page {
     display: grid;
     height: 100%;
-    transition: all .3s ease;
 }
 
 .with-side-panel {
@@ -45,43 +44,34 @@ const displayInfo = useDisplayInfoStorage();
 
     & .hover-me {
         position: absolute;
-        width: 100px;
+        width: min(100%, 560px);
         height: 100%;
         user-select: none;
-        transition: all 0.5s ease;
+        transition: width, transform 0.5s ease;
         display: flex;
-        flex-direction: row-reverse;
         z-index: 3;
+        transform: translateX(calc(-100% + 100px));
 
         & .img-container {
             height: 100%;
             max-width: 100px;
             display: flex;
-            justify-self: center;
-            transition: all 0.5s ease;
 
             & img {
-                max-width: 20%;
+                max-width: 25%;
                 opacity: .5;
-                transition: all .5s ease;
+                transition: transform .5s ease;
             }
         }
 
         & .side-panel {
             width: 100%;
             height: 100%;
-            left: 0;
             display: grid;
-            transition: all 0.5s ease;
-            transform: translate(-100%);
         }
 
         &:hover {
-            width: min(100%, 560px);
-
-            & .side-panel {
-                transform: translate(0%);
-            }
+            transform: translateX(0);
 
             & .img-container {
                 & img {

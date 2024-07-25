@@ -1,60 +1,34 @@
 <script setup lang="ts">
 import ChatsList from './ChatsList.vue';
-import SettingsWindow from './SettingsWindow.vue';
-import AddNewChat from './AddNewChat.vue';
+import SettingsWindow from './SidePanel/SettingsWindow.vue';
+import AddNewChat from './SidePanel/AddNewChat.vue';
+import Navigation from './SidePanel/Navigation.vue';
+import SearchBar from './SidePanel/SearchBar.vue';
 import { ref } from 'vue'
-import { useDisplayInfoStorage, useMessengerInfoStorage } from "../storage";
+import { useDisplayInfoStorage } from "../storage";
 
 const displayInfo = useDisplayInfoStorage();
-const messengerInfo = useMessengerInfoStorage();
 
 const isOpenSearchBar = ref(false);
-const searchChat = ref("");
 
 const changeSearchBarStatus = () => {
     isOpenSearchBar.value = !isOpenSearchBar.value;
 }
-
-const doSearch = () => {
-    messengerInfo.updateDisplayedChats(searchChat.value);
-}
-
 </script>
 
 <template>
     <div class="side-panel-container">
         <div :class="isOpenSearchBar ? 'search-bar-on' : 'search-bar-off'" class="head">
-            <div class="navigation ">
-                <div class="logo">
-                    <img src="/05059.jpg" alt="Logo">
-                </div>
-                <div @click="changeSearchBarStatus()" class="search-bar-icon">
-                    <img data-icon :src="'/search-icon.svg'" alt="search">
-                </div>
-                <div @click="displayInfo.openSettings" class="settings-icon">
-                    <img data-icon src="/settings-icon.svg" alt="search">
-                </div>
-                <div @click="displayInfo.sidePanelChange" :class="!displayInfo.isMainWithSidePanel ? 'left' : 'right'"
-                    class="hide-button-icon">
-                    <img data-icon src="/hide-button.svg" alt="Hide/Fix">
-                </div>
-            </div>
-            <div class="search-bar">
-                <input type="text" v-on:keyup.enter="doSearch()" v-model="searchChat" placeholder="Write chat name...">
-                <div @click="doSearch()" class="icon">
-                    <img data-icon src="/search-icon.svg" alt="search">
-                </div>
-            </div>
+            <Navigation class="navigation" @change-search-status="changeSearchBarStatus"></Navigation>
+            <SearchBar class="search-bar" :isOn="isOpenSearchBar"> </SearchBar>
         </div>
-        <div class="chat-table">
-            <ChatsList></ChatsList>
-        </div>
+        <ChatsList></ChatsList>
         <div @click="displayInfo.addNewDialogue" class="add-new-dialogue">
             <img data-icon src="/add.svg" alt="add">
         </div>
     </div>
     <AddNewChat :class="displayInfo.isAddNewChat ? 'open' : 'close'"></AddNewChat>
-    <SettingsWindow :class="displayInfo.isSettingsOpen ? 'open' : 'close'" class="settings-window"> </SettingsWindow>
+    <SettingsWindow :class="displayInfo.isSettingsOpen ? 'open' : 'close'"> </SettingsWindow>
 </template>
 
 <style scoped lang="scss">
@@ -74,26 +48,15 @@ const doSearch = () => {
     grid-template-rows: max(5%, 100px) min(95%, calc(100vh - 110px));
     background-color: var(--panel);
     position: relative;
-    transition: all .5s ease;
     z-index: 2;
-    color: var(--text-color);
 
     & .search-bar-on {
         display: grid;
-        transition: all .5s ease;
-        gap: 4%;
+
 
         & .navigation {
             height: 65%;
         }
-
-        & .search-bar {
-            & input {
-                height: max(100%, 2rem);
-                width: 100%;
-            }
-        }
-
     }
 
     & .search-bar-off {
@@ -102,21 +65,6 @@ const doSearch = () => {
 
         & .navigation {
             height: 100%;
-        }
-
-        & .search-bar {
-
-            & input {
-                border: none;
-                outline: none;
-                height: 0;
-            }
-
-            & .icon {
-                img {
-                    height: 0 !important;
-                }
-            }
         }
     }
 
@@ -130,36 +78,7 @@ const doSearch = () => {
         & .search-bar {
             display: flex;
             justify-content: center;
-
-            & .icon {
-                height: 30px;
-                width: 30px;
-                border-radius: 100%;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                transition: all .5s ease;
-                cursor: pointer;
-
-                & img {
-                    transition: all .5s ease;
-                    fill: var(--text-color);
-                    aspect-ratio: 1/1;
-                    height: 60%;
-                }
-
-                &:hover {
-                    background-color: rgb(211, 211, 211);
-                }
-            }
-
-            & input {
-                width: 95%;
-                outline: none;
-                border: none;
-                border-radius: .7rem;
-                transition: all .5s ease;
-            }
+            gap: .3rem;
         }
 
         & .navigation {
@@ -167,80 +86,27 @@ const doSearch = () => {
             justify-content: space-between;
             align-items: center;
             transition: all 0.5s ease;
-
-            & .logo {
-                height: 75%;
-                display: flex;
-                justify-content: center;
-
-                & img {
-                    max-height: 100%;
-                }
-            }
-
-            & .search-bar-icon,
-            & .settings-icon,
-            & .hide-button-icon {
-                height: 30px;
-                width: 30px;
-                border-radius: 100%;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                transition: all .5s ease;
-                cursor: pointer;
-
-                & img {
-                    transition: transform .5s ease;
-                    color: #fff;
-                    aspect-ratio: 1/1;
-                }
-
-                &:hover {
-                    background-color: rgb(211, 211, 211);
-                }
-            }
-
-            & .settings-icon:hover {
-                & img {
-                    transform: rotate(90deg);
-                }
-            }
-
-            & .left>img {
-                transform: rotate(180deg);
-            }
-
-            & .right>img {
-                transform: rotate(0);
-            }
         }
-    }
-
-    & .chat-table {
-        display: flex;
-        justify-content: center;
-        width: 100%;
-        max-height: 100%;
-        overflow-y: auto;
     }
 
     & .add-new-dialogue {
         position: absolute;
+        bottom: 1rem;
+        right: 1rem;
+
         width: 30px;
         height: 30px;
+
         display: flex;
-        align-content: center;
         justify-content: center;
+
         border-radius: 50%;
         background-color: var(--button-color-hover);
         padding: 1rem;
-        bottom: 1rem;
-        right: 1rem;
-        transition: all .3s ease;
         user-select: none;
         cursor: pointer;
         opacity: .5;
+        transition: opacity .3s ease;
 
         &:hover {
             opacity: .8;

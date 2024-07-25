@@ -95,14 +95,8 @@ export const api = {
         }
     },
     async GetUserContacts(user: User): Promise<User[]> {
-        try {
-            const { data, status } = await axios.get(`${apiUrl}/UserInfo/users/${user.id}/contacts`);
-            console.log('[api]', 'Chat name change status:', status);
-            return data;
-        }
-        catch (e) {
-            console.log(e);
-            return [];
-        }
+        const { data, status } = await axios.get(`${apiUrl}/UserInfo/users/${user.id}/contacts`);
+        console.log('[api]', 'Get user contacts status:', status);
+        return data;
     }
 } as const;

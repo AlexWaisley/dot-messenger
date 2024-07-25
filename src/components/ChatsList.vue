@@ -12,17 +12,18 @@ const hideList = () => {
     isHide.value = !isHide.value;
 }
 
-
-watch(messengerInfo.userChats, () => {
-    messengerInfo.userChats.sort((el, el1) => el1.lastMessageTime - el.lastMessageTime);
-    messengerInfo.userChats.forEach(chat => {
+watch(() => messengerInfo.displayedUserChats, () => {
+    chatsGroups.value = {};
+    messengerInfo.displayedUserChats.sort((el, el1) => el1.lastMessageTime - el.lastMessageTime);
+    messengerInfo.displayedUserChats.forEach(chat => {
         chat.chatMembersIds.sort((el, el1) => el1.localeCompare(el));
         chat.chatMembersIds.forEach(member => {
             const name = messengerInfo.getContactName(member);
             if (!chatsGroups.value[name]) {
                 chatsGroups.value[name] = [];
             }
-            chatsGroups.value[name].push(chat);
+            if (!chatsGroups.value[name].find(x => x === chat))
+                chatsGroups.value[name].push(chat);
         })
     });
 }, { immediate: true });
