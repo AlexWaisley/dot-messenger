@@ -1,72 +1,98 @@
 <script setup lang="ts">
 import ChatPreview from './ChatPreview.vue';
-import { ref, watch } from 'vue';
-import { useMessengerInfoStorage } from '@storage';
+import { ref } from 'vue';
 import { Chat } from '@models';
 
-const messengerInfo = useMessengerInfoStorage();
+const props = defineProps<{
+    chats: Chat[],
+    nick: string
+}>();
 
-const chatsGroups = ref<Record<string, Chat[]>>({});
 const isHide = ref(false);
 const hideList = () => {
     isHide.value = !isHide.value;
 }
-
-watch(() => messengerInfo.displayedUserChats, () => {
-    chatsGroups.value = {};
-    messengerInfo.displayedUserChats.sort((el, el1) => el1.lastMessageTime - el.lastMessageTime);
-    messengerInfo.displayedUserChats.forEach(chat => {
-        chat.chatMembersIds.sort((el, el1) => el1.localeCompare(el));
-        chat.chatMembersIds.forEach(member => {
-            const name = messengerInfo.getContactName(member);
-            if (!chatsGroups.value[name]) {
-                chatsGroups.value[name] = [];
-            }
-            if (!chatsGroups.value[name].find(x => x === chat))
-                chatsGroups.value[name].push(chat);
-        })
-    });
-}, { immediate: true });
 </script>
 
 <template>
-    <div class="groups-list">
-        <div class="group" v-for="(chats, nick) in chatsGroups">
-            <div class="opponent-nick" @click="hideList">{{ nick }}</div>
-            <div class="chats-list">
-                <ChatPreview v-for="chat in chats" :chat="chat">
-                </ChatPreview>
-            </div>
+    <div class="opponent-nick" @click="hideList">
+        <span>{{ props.nick }}</span>
+        <div :class="isHide ? 'show' : 'hide'" class="expand">
+            <img data-icon src="/hide-button.svg" alt="" />
         </div>
     </div>
+    <Transition>
+        <div v-if="!isHide" class="chats-list">
+            <ChatPreview v-for="chat in props.chats" :chat="chat" />
+        </div>
+    </Transition>
 </template>
 
 <style scoped lang="scss">
-.groups-list {
-    width: 100%;
-    max-height: 100%;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
+$expand-icon: 90deg;
 
-    & .group {
-        width: 100%;
-        max-height: 100%;
+.opponent-nick {
+    min-height: 1.75rem;
+    height: 1.75rem;
+    font-size: 1.25rem;
+    text-align: center;
+    background-color: var(--group-name-bg);
+    transition: background-color .5s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+
+    & .show {
+        $expand-icon: 90deg;
+        transform: rotate($expand-icon);
+    }
+
+    & .hide {
+        $expand-icon: -90deg;
+        transform: rotate($expand-icon);
+    }
+
+    & .expand {
+        position: absolute;
+        right: 0;
+        top: 0;
         display: flex;
-        flex-direction: column;
+        height: 100%;
+        transition: transform .5s ease;
+    }
 
-        & .opponent-nick {
-            text-align: center;
-            background-color: var(--hover-background);
+    &:hover {
+        background-color: var(--group-name-bg-hover);
+
+        & .hide {
+            transform: rotate($expand-icon);
         }
 
-        & .chats-list {
-            width: 100%;
-            max-height: 100%;
-            display: flex;
-            flex-direction: column;
-            transition: all .5s ease;
+        & .show {
+            $expand-icon: -90deg;
+            transform: rotate($expand-icon);
         }
     }
+}
+
+.v-enter-active,
+.v-leave-active {
+    opacity: 1;
+    transition: all 0.5s ease;
+    height: 100%;
+}
+
+.v-enter-from,
+.v-leave-to {
+    opacity: 0;
+    height: 0;
+
+}
+
+.chats-list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: height 0.5s ease, transform 0.5s ease, opacity 0.5s ease;
 }
 </style>

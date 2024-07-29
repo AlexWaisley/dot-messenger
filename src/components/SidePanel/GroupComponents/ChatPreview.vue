@@ -58,9 +58,9 @@ const openChat = async () => {
 .chat-preview-container {
     display: grid;
     grid-template-columns: 25% 75%;
-    max-width: 100%;
     transition: all .3s ease;
     padding: 0.2rem .4rem;
+    height: 100%;
     gap: .5rem;
     border-bottom: solid 1px var(--border-color);
     cursor: pointer;

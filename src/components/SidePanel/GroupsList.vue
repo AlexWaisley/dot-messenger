@@ -1,16 +1,12 @@
 <script setup lang="ts">
-import ChatPreview from './GroupComponents/ChatPreview.vue';
 import { ref, watch } from 'vue';
 import { useMessengerInfoStorage } from '@storage';
 import { Chat } from '@models';
+import ChatsList from './GroupComponents/ChatsList.vue';
 
 const messengerInfo = useMessengerInfoStorage();
 
 const chatsGroups = ref<Record<string, Chat[]>>({});
-const isHide = ref(false);
-const hideList = () => {
-    isHide.value = !isHide.value;
-}
 
 watch(() => messengerInfo.displayedUserChats, () => {
     chatsGroups.value = {};
@@ -31,12 +27,8 @@ watch(() => messengerInfo.displayedUserChats, () => {
 
 <template>
     <div class="groups-list">
-        <div class="group" v-for="(chats, nick) in chatsGroups">
-            <div class="opponent-nick" @click="hideList">{{ nick }}</div>
-            <div class="chats-list">
-                <ChatPreview v-for="chat in chats" :chat="chat">
-                </ChatPreview>
-            </div>
+        <div class="group">
+            <ChatsList v-for="(chats, nick) in chatsGroups" :chats="chats" :nick="nick" />
         </div>
     </div>
 </template>
@@ -44,29 +36,15 @@ watch(() => messengerInfo.displayedUserChats, () => {
 <style scoped lang="scss">
 .groups-list {
     width: 100%;
-    max-height: 100%;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
 
-    & .group {
+    .group {
         width: 100%;
-        max-height: 100%;
+        transition: all .5s ease;
         display: flex;
         flex-direction: column;
-
-        & .opponent-nick {
-            text-align: center;
-            background-color: var(--hover-background);
-        }
-
-        & .chats-list {
-            width: 100%;
-            max-height: 100%;
-            display: flex;
-            flex-direction: column;
-            transition: all .5s ease;
-        }
     }
 }
 </style>

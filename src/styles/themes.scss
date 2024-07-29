@@ -10,7 +10,9 @@ $pink-light: (
     text-color: #000,
     border-color: #ff8fbb,
     scroll-color: #DF98B2,
-    scroll-color-hover: #b5708a
+    scroll-color-hover: #b5708a,
+    group-name-bg: #d889a6,
+    group-name-bg-hover: #cb7795
 );
 
 $pink-dark: (
@@ -26,7 +28,9 @@ $pink-dark: (
     border-color: #2F1D24,
     scroll-color: #b05b79,
     scroll-color-hover: #90566c,
-    blacky:true,
+    group-name-bg: #ab5674,
+    group-name-bg-hover: #a54265,
+    blacky:true
 );
 
 $green-light: (
@@ -41,7 +45,9 @@ $green-light: (
     text-color: #000,
     border-color: #93f5c7,
     scroll-color: #93f5c7,
-    scroll-color-hover: #d2ffc8
+    scroll-color-hover: #d2ffc8,
+    group-name-bg: #81eab9,
+    group-name-bg-hover: #6edda9
 );
 
 $green-dark: (
@@ -57,7 +63,9 @@ $green-dark: (
     border-color: #2F1D24,
     scroll-color: #437054,
     scroll-color-hover: #437054,
-    blacky:true,
+    group-name-bg: #396b4c,
+    group-name-bg-hover: #346245,
+    blacky:true
 );
 
 $blue-light: (
@@ -72,7 +80,9 @@ $blue-light: (
     text-color: #000,
     border-color: #5CADE0,
     scroll-color: #5CADE0,
-    scroll-color-hover: #4b91bc
+    scroll-color-hover: #4b91bc,
+    group-name-bg: #3BA3D6,
+    group-name-bg-hover: #3394c5
 );
 
 $blue-dark: (
@@ -88,6 +98,8 @@ $blue-dark: (
     border-color: #4AA0B4,
     scroll-color: #284990,
     scroll-color-hover: #20376b,
+    group-name-bg: #244283,
+    group-name-bg-hover: #1e3973,
     blacky:true,
 );
 
@@ -103,7 +115,9 @@ $wb-light: (
     text-color: #000,
     border-color: #FCFCFC,
     scroll-color: #f4f4f4,
-    scroll-color-hover: #ebebeb
+    scroll-color-hover: #ebebeb,
+    group-name-bg: #eaeaea,
+    group-name-bg-hover: #d5d5d5,
 );
 
 $wb-dark: (
@@ -119,7 +133,9 @@ $wb-dark: (
     blacky:true,
     border-color: #393939,
     scroll-color: #393939,
-    scroll-color-hover: #2d2d2d
+    scroll-color-hover: #2d2d2d,
+    group-name-bg: #2c2c2c,
+    group-name-bg-hover: #393939,
 );
 
 @mixin theme($theme-map) {
@@ -135,6 +151,9 @@ $wb-dark: (
     $border-color: map-get($theme-map, border-color);
     $scroll-color: map-get($theme-map, scroll-color);
     $scroll-color-hover: map-get($theme-map, scroll-color-hover);
+    $group-name-bg: map-get($theme-map, group-name-bg);
+    $group-name-bg-hover: map-get($theme-map, group-name-bg-hover);
+
 
     --background:#{$background};
     --chat-background: #{$chat-background};
@@ -148,6 +167,8 @@ $wb-dark: (
     --border-color: #{$border-color};
     --scroll-color:#{$scroll-color};
     --scroll-color-hover:#{$scroll-color-hover};
+    --group-name-bg:#{$group-name-bg};
+    --group-name-bg-hover:#{$group-name-bg-hover};
 
     @if map-get($theme-map, blacky) {
         *[data-icon] {
