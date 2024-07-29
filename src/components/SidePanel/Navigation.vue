@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useDisplayInfoStorage } from "../../storage";
+import { useDisplayInfoStorage } from "@storage";
 
 const displayInfo = useDisplayInfoStorage();
 

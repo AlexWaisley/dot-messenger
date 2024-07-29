@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Message } from '../models';
+import { Message } from '@models';
 import MessageComponent from './Message.vue';
 import { ref, watch } from 'vue';
 

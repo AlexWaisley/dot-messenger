@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useDisplayInfoStorage, useMessengerInfoStorage } from "../../storage";
+import { useDisplayInfoStorage, useMessengerInfoStorage } from "@storage";
 import { ref } from 'vue';
 import Option from './Settings/Option.vue';
 import Head from './Settings/Head.vue';
@@ -10,7 +10,6 @@ const displayInfo = useDisplayInfoStorage();
 const messengerInfo = useMessengerInfoStorage();
 const header = ref("Settings");
 const state = ref<'settings' | 'themes' | 'accountSettings'>('settings');
-
 
 const back = () => {
     state.value = 'settings'
@@ -68,7 +67,7 @@ const openThemes = () => {
 
 .slide-right-enter,
 .slide-right-leave-to {
-    transform: translateY(-100%);
+    transform: translateX(-100%);
 }
 
 .container {
@@ -106,6 +105,14 @@ const openThemes = () => {
                 position: absolute;
                 left: 0;
                 z-index: 2;
+                display: flex;
+                border-radius: 50%;
+                transition: background-color .5s ease;
+                padding: .2rem;
+
+                &:hover {
+                    background-color: var(--button-color-hover);
+                }
             }
 
             & .settings {

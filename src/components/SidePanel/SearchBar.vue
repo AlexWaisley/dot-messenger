@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useMessengerInfoStorage } from "../../storage";
+import { useMessengerInfoStorage } from "@storage";
 
 const messengerInfo = useMessengerInfoStorage();
 const searchChat = ref("");
@@ -43,7 +43,6 @@ const doSearch = () => {
     align-items: center;
     transition: all .5s ease;
     cursor: pointer;
-    background-color: var(--button-color);
 
     & img {
         height: 60%;

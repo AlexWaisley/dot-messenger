@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import ChatsList from './ChatsList.vue';
-import SettingsWindow from './SidePanel/SettingsWindow.vue';
-import AddNewChat from './SidePanel/AddNewChat.vue';
+import GroupsList from './SidePanel/GroupsList.vue';
+import SettingsWindow from './SidePanel/AdditionalWindows/SettingsWindow.vue';
+import AddNewChat from './SidePanel/AdditionalWindows/AddNewChat.vue';
 import Navigation from './SidePanel/Navigation.vue';
 import SearchBar from './SidePanel/SearchBar.vue';
 import { ref } from 'vue'
-import { useDisplayInfoStorage } from "../storage";
+import { useDisplayInfoStorage } from "@storage";
 
 const displayInfo = useDisplayInfoStorage();
 
@@ -22,7 +22,7 @@ const changeSearchBarStatus = () => {
             <Navigation class="navigation" @change-search-status="changeSearchBarStatus"></Navigation>
             <SearchBar class="search-bar" :isOn="isOpenSearchBar"> </SearchBar>
         </div>
-        <ChatsList></ChatsList>
+        <GroupsList></GroupsList>
         <div @click="displayInfo.addNewDialogue" class="add-new-dialogue">
             <img data-icon src="/add.svg" alt="add">
         </div>

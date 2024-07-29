@@ -30,7 +30,7 @@ const changePassw = () => {
 
 .slide-right-enter,
 .slide-right-leave-to {
-    transform: translateY(-100%);
+    transform: translateX(-100%);
 }
 
 .account {

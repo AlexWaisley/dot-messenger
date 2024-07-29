@@ -18,6 +18,7 @@ const props = defineProps<{
     width: 95%;
     background-color: var(--button-color);
     cursor: pointer;
+    transition: background-color .3s ease;
 
     & img {
         position: absolute;

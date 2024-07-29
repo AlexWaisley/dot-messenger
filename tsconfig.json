@@ -6,6 +6,13 @@
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
 
+    "baseUrl": ".",
+    "paths": {
+      "@storage": ["./src/storage"],
+      "@models": ["./src/models"],
+      "@components/*": ["./src/components/*"],
+    },
+
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,

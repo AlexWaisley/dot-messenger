@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useMessengerInfoStorage } from "../../../storage";
-import InputField from '../../InputField.vue';
+import { useMessengerInfoStorage } from "@storage";
+import InputField from '@components/InputField.vue';
 
 const messengerInfo = useMessengerInfoStorage();
 

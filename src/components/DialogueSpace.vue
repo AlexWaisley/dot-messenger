@@ -2,27 +2,27 @@
 import Chat from './Chat.vue'
 import { ref, watch } from 'vue';
 
-import { useDisplayInfoStorage, useMessengerInfoStorage } from "../storage";
+import { useDisplayInfoStorage, useMessengerInfoStorage } from "@storage";
 
 const displayInfo = useDisplayInfoStorage();
 const messengerInfo = useMessengerInfoStorage();
 const chatName = ref(messengerInfo.currentChat.name);
 
 const isEdit = ref(false);
-const isTextInputed = ref(false);
+const isTextEntered = ref(false);
 const message = ref("");
-const currChatMesseges = ref(messengerInfo.messages.filter((element) => element.chatId === messengerInfo.currentChat.id));
+const currChatMessages = ref(messengerInfo.messages.filter((element) => element.chatId === messengerInfo.currentChat.id));
 watch(() => message.value, () => {
-    isTextInputed.value = message.value.length != 0;
+    isTextEntered.value = message.value.length != 0;
 }, { immediate: true })
 
 watch(() => messengerInfo.currentChat.id, () => {
-    currChatMesseges.value = messengerInfo.messages.filter((element) => element.chatId === messengerInfo.currentChat.id);
+    currChatMessages.value = messengerInfo.messages.filter((element) => element.chatId === messengerInfo.currentChat.id);
     chatName.value = messengerInfo.currentChat.name;
 }, { immediate: true })
 
 watch(messengerInfo.messages, () => {
-    currChatMesseges.value = messengerInfo.messages.filter((element) => element.chatId === messengerInfo.currentChat.id);
+    currChatMessages.value = messengerInfo.messages.filter((element) => element.chatId === messengerInfo.currentChat.id);
 }, { immediate: true })
 
 const sendNewMessage = () => {
@@ -64,14 +64,14 @@ const updateChatName = async () => {
                 </div>
             </div>
             <div class="chat">
-                <Chat :messages="currChatMesseges" @load="loadMoreMessages()"></Chat>
+                <Chat :messages="currChatMessages" @load="loadMoreMessages()"></Chat>
             </div>
             <div class="input-field">
                 <div class="input-container">
                     <input v-on:keyup.enter="sendNewMessage()" type="text" v-model="message"
                         placeholder="Write a message..." />
                 </div>
-                <div @click="sendNewMessage()" class="send-btn" :class="isTextInputed ? 'send' : ''">Send</div>
+                <div @click="sendNewMessage()" class="send-btn" :class="isTextEntered ? 'send' : ''">Send</div>
             </div>
         </div>
     </div>
@@ -142,7 +142,6 @@ const updateChatName = async () => {
                 & img {
                     height: 100%;
                     transform: rotate(45deg);
-                    filter: invert(100%);
                 }
 
                 &:hover {

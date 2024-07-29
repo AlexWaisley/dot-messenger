@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import ChatPreview from './ChatPreview.vue';
+import ChatPreview from './GroupComponents/ChatPreview.vue';
 import { ref, watch } from 'vue';
-import { useMessengerInfoStorage } from '../storage';
-import { Chat } from '../models';
+import { useMessengerInfoStorage } from '@storage';
+import { Chat } from '@models';
 
 const messengerInfo = useMessengerInfoStorage();
 

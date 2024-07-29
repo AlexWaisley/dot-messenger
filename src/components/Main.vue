@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import SidePanel from './SidePanel.vue';
 import DialogueSpace from './DialogueSpace.vue';
-import { useDisplayInfoStorage } from "../storage/displayInfo";
+import { useDisplayInfoStorage } from "@storage";
 
 const displayInfo = useDisplayInfoStorage();
 </script>

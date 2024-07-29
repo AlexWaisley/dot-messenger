@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { useMessengerInfoStorage } from "../storage";
-import { useDisplayInfoStorage } from "../storage/displayInfo";
+import { useDisplayInfoStorage, useMessengerInfoStorage } from "@storage";
+import { Chat } from '@models';
 import { ref } from 'vue';
-import { Chat } from '../models';
 import moment from 'moment';
 
 const displayInfo = useDisplayInfoStorage();

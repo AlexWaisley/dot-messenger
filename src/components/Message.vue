@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import moment from 'moment';
-import { Message } from '../models';
-import { useMessengerInfoStorage } from '../storage';
+import { Message } from '@models';
+import { useMessengerInfoStorage } from '@storage';
 
 const messengerInfo = useMessengerInfoStorage();
 import { ref, watch } from 'vue';
@@ -47,65 +47,20 @@ watch(() => props.message, () => {
 </template>
 
 <style scoped lang="scss">
-.non-user-message {
-    display: flex;
-    transition: all .3s ease;
-    align-items: flex-end;
-    gap: 1rem;
-    background: var(--chat-opponent-message);
-    padding: .5rem;
-    border-radius: .5rem;
-
-    & .message-info-container {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: flex-end;
-        gap: .5rem;
-        padding: .25rem;
-        border-radius: .25rem;
-
-        & .chat-info {
-            width: 100%;
-            display: flex;
-
-            & .last-message-info {
-                width: 100%;
-                display: flex;
-                justify-content: center;
-                align-items: flex-end;
-            }
-        }
-
-        & .image-wrapper {
-            display: flex;
-            justify-content: center;
-            height: 150px;
-            aspect-ratio: 1/1;
-
-            & img {
-                height: 100%;
-                max-width: 100%;
-                object-fit: cover;
-            }
-        }
-    }
-
-    & .text-container {
-        display: grid;
-        width: 100%;
-        text-align: justify;
-        height: 100%;
-        gap: .5rem;
-    }
+.curr-user-message {
+    background: var(--chat-user-message);
 }
 
+.non-user-message {
+    background: var(--chat-opponent-message);
+}
+
+.non-user-message,
 .curr-user-message {
     display: flex;
     transition: all .3s ease;
     align-items: flex-end;
     gap: 1rem;
-    background: var(--chat-user-message);
     padding: .5rem;
     border-radius: .5rem;
 
@@ -138,7 +93,7 @@ watch(() => props.message, () => {
         & .image-wrapper {
             display: flex;
             justify-content: center;
-            height: 150px;
+            height: 100px;
             aspect-ratio: 1/1;
 
             & img {
