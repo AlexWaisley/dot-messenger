@@ -35,6 +35,7 @@ export const useMessengerInfoStorage = defineStore('messengerInfo', () => {
                 if (jsonuser !== null) {
                     user.value = JSON.parse(jsonuser);
                     contacts.value = JSON.parse(jsoncontacts);
+                    waiting();
                     await updateInfo();
                     return true;
                 }
@@ -105,7 +106,7 @@ export const useMessengerInfoStorage = defineStore('messengerInfo', () => {
         const tempMessages = await api.GetChatMessages(user.value, currentChat.value, offset, count);
         if (tempMessages !== null) {
             tempMessages.forEach((element) => {
-                if (messages.value.find((messege) => messege.id === element.id) === undefined) {
+                if (messages.value.find((message) => message.id === element.id) === undefined) {
                     messages.value.unshift(element);
                 }
             })
@@ -114,14 +115,26 @@ export const useMessengerInfoStorage = defineStore('messengerInfo', () => {
     }
 
     const updateChatName = async (newName: string) => {
+        if (newName.length === 0) {
+            toastr.error("Chat name must contain at least 1 symbol");
+            return;
+        }
         currentChat.value.name = newName;
+        const chatToUpdate = displayedUserChats.value.find(x => x.id === currentChat.value.id);
+        if (chatToUpdate) {
+            chatToUpdate.name = newName;
+        }
         await api.ChangeChatName(user.value, currentChat.value);
     }
 
     const addNewChat = async (chatForm: ChatDto) => {
+        if (chatForm.name.length === 0) {
+            toastr.error("Chat name must contain at least 1 symbol");
+            return;
+        }
         const result = await api.AddChat(user.value, chatForm);
         if (result !== null) {
-            await getUserChats();
+            await updateInfo();
         }
     }
 
@@ -149,7 +162,12 @@ export const useMessengerInfoStorage = defineStore('messengerInfo', () => {
         return "No contact with this id";
     }
 
+    const deleteChat = async () => {
+        await api.DeleteChat(user.value, currentChat.value);
+        await updateInfo();
+    }
+
     return {
-        user, currentChat, loginUser, userChats, getUserChats, messages, getMessages, registerNewUser, addNewChat, addMessageToChat, changeCurrentChat, checkUserLogedIn, displayedUserChats, updateDisplayedChats, changePassword, updateChatName, getContactName
+        user, currentChat, loginUser, userChats, getUserChats, messages, getMessages, registerNewUser, addNewChat, addMessageToChat, changeCurrentChat, checkUserLogedIn, displayedUserChats, updateDisplayedChats, changePassword, updateChatName, getContactName, deleteChat
     }
 });

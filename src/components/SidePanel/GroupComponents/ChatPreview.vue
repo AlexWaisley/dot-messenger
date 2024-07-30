@@ -1,29 +1,15 @@
 <script setup lang="ts">
 import { useDisplayInfoStorage, useMessengerInfoStorage } from "@storage";
 import { Chat } from '@models';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import moment from 'moment';
 
 const displayInfo = useDisplayInfoStorage();
 const messengerInfo = useMessengerInfoStorage();
 
 const props = defineProps<{ chat: Chat }>();
-
 const lastMessage = ref("");
 const lastMessageTime = ref("");
-
-if (props.chat.lastMessage) {
-    lastMessage.value = props.chat.lastMessage;
-    if (moment().format('L') === moment.unix(props.chat.lastMessageTime).format('L')) {
-        lastMessageTime.value = moment.unix(props.chat.lastMessageTime).format('HH:mm');
-    }
-    else {
-        lastMessageTime.value = moment.unix(props.chat.lastMessageTime).format("YYYY/MM/D");
-    }
-}
-else {
-    lastMessage.value = "Dialog is empty";
-}
 
 const openChat = async () => {
     if (messengerInfo.currentChat.id !== props.chat.id) {
@@ -31,6 +17,22 @@ const openChat = async () => {
         displayInfo.openDialogue();
     }
 }
+
+watch(() => props.chat, () => {
+
+    if (props.chat.lastMessage) {
+        lastMessage.value = props.chat.lastMessage;
+        if (moment().format('L') === moment.unix(props.chat.lastMessageTime).format('L')) {
+            lastMessageTime.value = moment.unix(props.chat.lastMessageTime).format('HH:mm');
+        }
+        else {
+            lastMessageTime.value = moment.unix(props.chat.lastMessageTime).format("YYYY/MM/D");
+        }
+    }
+    else {
+        lastMessage.value = "Dialog is empty";
+    }
+}, { immediate: true })
 </script>
 
 <template>
@@ -127,7 +129,6 @@ const openChat = async () => {
                 white-space: nowrap;
                 text-overflow: ellipsis;
             }
-
         }
     }
 

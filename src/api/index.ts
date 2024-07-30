@@ -83,6 +83,17 @@ export const api = {
             return null;
         }
     },
+    async DeleteChat(user: User, chat: Chat) {
+        try {
+            const { data, status } = await axios.delete(`${apiUrl}/UserInfo/users/${user.id}/chats/${chat.id}`);
+            console.log('[api]', 'Delete chat status:', status);
+            return data;
+        }
+        catch (e) {
+            console.log(e);
+            return null;
+        }
+    },
     async ChangeChatName(user: User, chat: Chat) {
         try {
             const { data, status } = await axios.post(`${apiUrl}/UserInfo/users/${user.id}/chats/${chat.id}/name`, { id: chat.id, name: chat.name });

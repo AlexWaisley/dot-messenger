@@ -12,6 +12,8 @@ const opponentNickname = ref("");
 const submit = async () => {
     messengerInfo.addNewChat({ name: chatName.value, opponentNickname: opponentNickname.value });
     displayInfo.closeNewDialogueWindow();
+    chatName.value = "";
+    opponentNickname.value = "";
 }
 </script>
 <template>
