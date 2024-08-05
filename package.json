@@ -9,9 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vueuse/core": "^10.11.0",
     "axios": "^1.7.2",
     "moment": "^2.30.1",
-    "momentjs": "^2.0.0",
     "pinia": "^2.1.7",
     "toastr": "^2.1.4",
     "vue": "^3.4.19"

@@ -1,46 +1,42 @@
 <script setup lang="ts">
-import { useDisplayInfoStorage, useMessengerInfoStorage } from '@storage';
+import { useUserStore } from '@storage';
 import { ref } from 'vue';
 import InputField from './InputField.vue';
+import { LoginRequest } from '@models';
 
-const displayInfo = useDisplayInfoStorage();
-const messengerInfo = useMessengerInfoStorage();
+const userStore = useUserStore();
 
-const login = ref("");
-const password = ref("");
+const state = ref<LoginRequest>({ login: "", password: "" });
+const isLoading = ref(false);
 
 const logIn = async () => {
-    displayInfo.loadingStatusChange();
-    if (await messengerInfo.loginUser({ login: login.value, password: password.value })) {
-        displayInfo.loggedIn();
-    }
-    displayInfo.loadingStatusChange();
+    isLoading.value = true;
+    await userStore.loginUser(state.value)
+    isLoading.value = false;
 }
 
 const register = async () => {
-    displayInfo.loadingStatusChange();
-    if (await messengerInfo.registerNewUser({ login: login.value, password: password.value })) {
-        displayInfo.loggedIn();
-    }
-    displayInfo.loadingStatusChange();
+    isLoading.value = true;
+    await userStore.registerNewUser(state.value)
+    isLoading.value = false;
 }
 
 </script>
 <template>
-    <div v-if="!displayInfo.isLoading" class="entry-page">
-        <div class="login-block">
+    <div v-if="isLoading" class="loader--container">
+        <div class="loader"></div>
+    </div>
+    <div v-else class="entry-page">
+        <form @submit.prevent="logIn" class="login-block">
             <div class="input-fields">
-                <InputField placeholder="Nickname" type="text" :func="logIn" v-model:inputModel="login" />
-                <InputField placeholder="Password" type="password" :func="logIn" v-model:inputModel="password" />
+                <InputField placeholder="Nickname" type="text" v-model="state.login" />
+                <InputField placeholder="Password" type="password" v-model="state.password" />
             </div>
             <div class="submit-btns">
                 <button type="button" @click="register">Register</button>
-                <button type="button" @click="logIn">Login</button>
+                <button type="submit">Login</button>
             </div>
-        </div>
-    </div>
-    <div v-else class="loader--container">
-        <div class="loader"></div>
+        </form>
     </div>
 </template>
 

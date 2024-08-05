@@ -1,37 +1,41 @@
 <script setup lang="ts">
-import { useDisplayInfoStorage, useMessengerInfoStorage } from "@storage";
+import { useMessengerInfoStorage } from "@storage";
 import { ref } from 'vue';
 import InputField from '@components/InputField.vue';
+import { ChatDto } from "@models";
 
-const displayInfo = useDisplayInfoStorage();
 const messengerInfo = useMessengerInfoStorage();
+const emits = defineEmits<{
+    (e:'close'):void
+}>();
 
-const chatName = ref("");
-const opponentNickname = ref("");
+const state = ref<ChatDto>({ name: "", opponentNickname: "" });
 
 const submit = async () => {
-    messengerInfo.addNewChat({ name: chatName.value, opponentNickname: opponentNickname.value });
-    displayInfo.closeNewDialogueWindow();
-    chatName.value = "";
-    opponentNickname.value = "";
+    messengerInfo.addNewChat(state.value);
+    emits('close')
+    state.value = { name: "", opponentNickname: "" };
 }
 </script>
+
 <template>
     <div class="container">
-        <div class="new-chat-window">
+        <form @submit.prevent="submit" class="new-chat-window">
             <div class="input-fields-container">
-                <InputField placeholder="Enter chat name" type="text" :func="submit" v-model:inputModel="chatName" />
-                <InputField placeholder="Enter opponent nickname" type="text" :func="submit"
-                    v-model:inputModel="opponentNickname" />
+                <InputField placeholder="Enter chat name" type="text" v-model="state.name" />
+                <InputField placeholder="Enter opponent nickname" type="text" v-model="state.opponentNickname" />
             </div>
             <div class="action-buttons">
-                <button @click="displayInfo.closeNewDialogueWindow" class="cancel-btn">CANCEL</button>
-                <button @click="submit()" class="submit-btn">SUBMIT</button>
+                <button @click="emits('close')">CANCEL</button>
+                <button type="submit">SUBMIT</button>
             </div>
-        </div>
+        </form>
     </div>
 </template>
+
 <style scoped lang="scss">
+@import "/src/styles/animations.scss";
+
 .container {
     position: absolute;
     top: 0;
@@ -39,10 +43,10 @@ const submit = async () => {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.1);
-    z-index: 3;
+    z-index: 4;
     display: grid;
     place-items: center;
-    transition: transform .5s ease;
+    transition: opacity .5s ease;
     color: var(--text-color);
 
     & .new-chat-window {
@@ -51,7 +55,10 @@ const submit = async () => {
         background-color: var(--background);
         border-radius: 5rem;
         display: grid;
+        transition: all .5s ease;
         grid-template-rows: 4fr 1fr;
+        animation-name: go-down;
+        animation-duration: 1s;
 
         & .input-fields-container {
             display: flex;

@@ -1,31 +1,27 @@
 <script setup lang="ts">
-import { useDisplayInfoStorage, useMessengerInfoStorage } from '@storage';
-import { ref, watch } from 'vue';
+import { useMessengerInfoStorage } from '@storage';
+import { ref } from 'vue';
 const messengerInfo = useMessengerInfoStorage();
-const displayInfo = useDisplayInfoStorage();
 
 const isEdit = ref(false);
-const chatName = ref(messengerInfo.currentChat.name);
+const chatName = ref(messengerInfo.currentChat?.name);
 
-const emit = defineEmits(['close']);
+const emits = defineEmits<{
+    (e: 'close'): void;
+}>();
 
 const updateChatName = async () => {
     isEdit.value = false;
-    if (messengerInfo.currentChat.name !== chatName.value)
-        await messengerInfo.updateChatName(chatName.value);
-}
+    if (!messengerInfo.currentChat || messengerInfo.currentChat.name === chatName.value)
+        return;
 
-watch(() => messengerInfo.currentChat.id, () => {
-    chatName.value = messengerInfo.currentChat.name;
-}, { immediate: true })
+    await messengerInfo.updateChatName(chatName.value!);
+}
 
 const deleteThisChat = () => {
     messengerInfo.deleteChat();
-    displayInfo.closeDialogue();
-    messengerInfo.currentChat.id = "0";
-    emit('close');
+    emits('close');
 }
-
 </script>
 
 <template>
@@ -33,7 +29,7 @@ const deleteThisChat = () => {
         <div class="settings-window">
             <div class="head">
                 <span class="top">Chat settings</span>
-                <div @click="$emit('close')" class="close-btn">
+                <div @click="emits('close')" class="close-btn">
                     <img data-icon src="/add.svg" alt="Exit">
                 </div>
             </div>
@@ -49,6 +45,8 @@ const deleteThisChat = () => {
     </div>
 </template>
 <style scoped lang="scss">
+@import "/src/styles/animations.scss";
+
 .container {
     position: absolute;
     top: 0;
@@ -73,6 +71,8 @@ const deleteThisChat = () => {
         align-items: center;
         position: relative;
         gap: .5rem;
+        animation-name: go-down;
+        animation-duration: 1s;
 
         & .head {
             min-height: 50px;

@@ -17,7 +17,7 @@ const hideList = () => {
 <template>
     <div class="opponent-nick" @click="hideList">
         <span>{{ props.nick }}</span>
-        <div :class="isHide ? 'show' : 'hide'" class="expand">
+        <div :data-turned-icon="isHide" class="expand">
             <img data-icon src="/hide-button.svg" alt="" />
         </div>
     </div>
@@ -42,15 +42,6 @@ $expand-icon: 90deg;
     position: relative;
     overflow: hidden;
 
-    & .show {
-        $expand-icon: 90deg;
-        transform: rotate($expand-icon);
-    }
-
-    & .hide {
-        $expand-icon: -90deg;
-        transform: rotate($expand-icon);
-    }
 
     & .expand {
         position: absolute;
@@ -59,6 +50,16 @@ $expand-icon: 90deg;
         display: flex;
         height: 100%;
         transition: transform .5s ease;
+
+        &[data-turned-icon="true"] {
+            $expand-icon: 90deg;
+            transform: rotate($expand-icon);
+        }
+
+        &[data-turned-icon="false"] {
+            $expand-icon: -90deg;
+            transform: rotate($expand-icon);
+        }
     }
 
     &:hover {
@@ -86,7 +87,6 @@ $expand-icon: 90deg;
 .v-leave-to {
     opacity: 0;
     height: 0;
-
 }
 
 .chats-list {

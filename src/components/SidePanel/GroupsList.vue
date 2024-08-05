@@ -1,28 +1,45 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { computed } from 'vue';
 import { useMessengerInfoStorage } from '@storage';
 import { Chat } from '@models';
 import ChatsList from './GroupComponents/ChatsList.vue';
 
 const messengerInfo = useMessengerInfoStorage();
 
-const chatsGroups = ref<Record<string, Chat[]>>({});
+const props = defineProps<{
+    searchString: string
+}>();
 
-watch(() => messengerInfo.displayedUserChats, () => {
-    chatsGroups.value = {};
-    messengerInfo.displayedUserChats.sort((el, el1) => el1.lastMessageTime - el.lastMessageTime);
-    messengerInfo.displayedUserChats.forEach(chat => {
-        chat.chatMembersIds.sort((el, el1) => el1.localeCompare(el));
-        chat.chatMembersIds.forEach(member => {
+const filteredChats = computed(() => {
+    const searchLower = props.searchString.toLocaleLowerCase();
+    return messengerInfo.userChats.filter(chat =>
+        chat.name.toLocaleLowerCase().includes(searchLower)
+    );
+});
+
+const sortedChats = computed(() => {
+    return filteredChats.value
+        .slice()
+        .sort((a, b) => b.lastMessageTime - a.lastMessageTime);
+});
+
+const chatsGroups = computed(() => {
+    return sortedChats.value.reduce((groups, chat) => {
+        const sortedMembers = chat.chatMembersIds.slice().sort((a, b) => b.localeCompare(a));
+
+        sortedMembers.forEach(member => {
             const name = messengerInfo.getContactName(member);
-            if (!chatsGroups.value[name]) {
-                chatsGroups.value[name] = [];
+            if (!groups[name]) {
+                groups[name] = [];
             }
-            if (!chatsGroups.value[name].find(x => x === chat))
-                chatsGroups.value[name].push(chat);
-        })
-    });
-}, { immediate: true });
+            if (!groups[name].includes(chat)) {
+                groups[name].push(chat);
+            }
+        });
+
+        return groups;
+    }, {} as Record<string, Chat[]>);
+});
 </script>
 
 <template>

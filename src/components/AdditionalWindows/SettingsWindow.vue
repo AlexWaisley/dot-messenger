@@ -1,15 +1,17 @@
 <script setup lang="ts">
-import { useDisplayInfoStorage, useMessengerInfoStorage } from "@storage";
+import { useUserStore } from "@storage";
 import { ref } from 'vue';
 import Option from './Settings/Option.vue';
 import Head from './Settings/Head.vue';
 import AccountOptions from './Settings/AccountOptions.vue';
 import ThemePicker from './Settings/ThemePicker.vue';
 
-const displayInfo = useDisplayInfoStorage();
-const messengerInfo = useMessengerInfoStorage();
+const userStore = useUserStore();
 const header = ref("Settings");
 const state = ref<'settings' | 'themes' | 'accountSettings'>('settings');
+const emits = defineEmits<{
+    (e: 'close'): void
+}>();
 
 const back = () => {
     state.value = 'settings'
@@ -18,12 +20,14 @@ const back = () => {
 
 const closeSettings = () => {
     back();
-    displayInfo.closeSettings();
+    emits('close');
 };
 
 const openAccountSettings = () => {
+    if (!userStore.user)
+        return
     state.value = 'accountSettings';
-    header.value = messengerInfo.user.login;
+    header.value = userStore.user.login;
 };
 
 const openThemes = () => {
@@ -38,19 +42,19 @@ const openThemes = () => {
 
             <Head :header="header" @close="closeSettings" />
             <div class="options-cover">
-                <Transition name="slide-right">
+                <Transition>
                     <div v-if="state === 'settings'" class="settings">
                         <Option @click="openAccountSettings" name="Account" />
                         <Option @click="openThemes" name="Themes" />
                     </div>
                 </Transition>
-                <Transition name="slide-right">
+                <Transition>
                     <ThemePicker v-if="state === 'themes'" />
                 </Transition>
-                <Transition name="slide-right">
+                <Transition>
                     <AccountOptions v-if="state === 'accountSettings'" />
                 </Transition>
-                <Transition name="slide-right">
+                <Transition>
                     <div v-if="state !== 'settings'" class="back-btn" @click="back">
                         <img data-icon src="/hide-button.svg" alt="">
                     </div>
@@ -60,13 +64,15 @@ const openThemes = () => {
     </div>
 </template>
 <style scoped lang="scss">
-.slide-right-enter-active,
-.slide-right-leave-active {
+@import "/src/styles/animations.scss";
+
+.v-enter-active,
+.v-leave-active {
     transition: transform .5s;
 }
 
-.slide-right-enter,
-.slide-right-leave-to {
+.v-enter-from,
+.v-leave-to {
     transform: translateX(-100%);
 }
 
@@ -92,6 +98,8 @@ const openThemes = () => {
         flex-direction: column;
         align-items: center;
         padding: .5rem;
+        animation-name: go-down;
+        animation-duration: 1s;
 
         & .options-cover {
             display: grid;

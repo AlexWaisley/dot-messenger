@@ -1,16 +1,15 @@
 <script setup lang="ts">
 const props = defineProps<{
     placeholder: string,
-    type: string,
-    func?: () => void
+    type: string
 }>();
 
-const inputText = defineModel('inputModel', { required: true });
+const inputText = defineModel({ required: true });
 </script>
 
 <template>
     <label class="label">
-        <input v-model="inputText" v-on:keyup.enter="props.func" :type="props.type" required>
+        <input v-model="inputText" :type="props.type" required>
         <span class="placeholder">{{ props.placeholder }}</span>
     </label>
 </template>
@@ -20,6 +19,12 @@ const inputText = defineModel('inputModel', { required: true });
     position: relative;
     padding-top: 20px;
     font-size: 20px;
+
+    &[data-wrong="true"] {
+        input {
+            border: 2px red solid;
+        }
+    }
 
     & .placeholder {
         position: absolute;

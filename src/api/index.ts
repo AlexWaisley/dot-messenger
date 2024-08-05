@@ -1,10 +1,10 @@
 import axios from "axios";
-import { Chat, ChatDto, Message, MessageDto, User, UserDto } from "../models";
+import { Chat, ChatDto, Message, MessageDto, User, LoginRequest } from "../models";
 
 
 const apiUrl = import.meta.env.VITE_API_URL;
 export const api = {
-    async CheckUserValid(user: UserDto): Promise<User | null> {
+    async Login(user: LoginRequest): Promise<User | null> {
         try {
             const { data, status } = await axios.post(`${apiUrl}/UserInfo/login`, user);
             console.log('[api]', 'User valid status:', status);
@@ -52,6 +52,7 @@ export const api = {
     },
     async AddMessage(user: User, chat: Chat, messageForm: MessageDto) {
         try {
+            console.log(messageForm.content);
             const { data, status } = await axios.post(`${apiUrl}/UserInfo/users/${user.id}/chats/${chat.id}/messages`, messageForm);
             console.log('[api]', 'Add message status:', status);
             return data;
@@ -61,7 +62,7 @@ export const api = {
             return null;
         }
     },
-    async RegisterNewUser(userForm: UserDto) {
+    async RegisterNewUser(userForm: LoginRequest) {
         try {
             const { data, status } = await axios.post(`${apiUrl}/UserInfo/register`, userForm);
             console.log('[api]', 'User register status:', status);
@@ -72,7 +73,7 @@ export const api = {
             return null;
         }
     },
-    async ChangePassword(user: User, userForm: UserDto) {
+    async ChangePassword(user: User, userForm: LoginRequest) {
         try {
             const { data, status } = await axios.post(`${apiUrl}/UserInfo/users/${user.id}/changepass`, userForm);
             console.log('[api]', 'User password change status:', status);

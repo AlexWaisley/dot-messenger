@@ -1,71 +1,123 @@
 <script setup lang="ts">
-import { useDisplayInfoStorage } from "@storage";
+import { ref, watch } from "vue";
+import { useMessengerInfoStorage } from "@storage";
 
-const displayInfo = useDisplayInfoStorage();
+const emits = defineEmits<{
+    (e: 'change-search-status'): void;
+    (e: 'change-side-panel-status'): void;
+    (e: 'open-settings'): void;
+}>();
 
-const emit = defineEmits(['changeSearchStatus']);
+
+const isToHide = ref(false);
+const isOpenSearchBar = ref(false);
+const messengerInfo = useMessengerInfoStorage();
+
+watch(() => messengerInfo.currentChat, (chat) => {
+    if (chat && window.innerWidth < 650) {
+        isToHide.value = true;
+    }
+})
+
+const changePanelStatus = () => {
+    if (isToHide.value && window.innerWidth < 650) {
+        messengerInfo.currentChat = null;
+    }
+    isToHide.value = !isToHide.value;
+    emits('change-side-panel-status');
+}
+
+const openSearchBar = () => {
+    isOpenSearchBar.value = !isOpenSearchBar.value;
+    emits('change-search-status');
+}
 </script>
 <template>
-    <div>
+    <div :data-search-bar-on="isOpenSearchBar" class="navigation">
         <div class="logo">
             <img src="/05059.jpg" alt="Logo">
         </div>
-        <div @click="$emit('changeSearchStatus')" class="search-bar-icon">
+        <div @click="openSearchBar" class="icon">
             <img data-icon :src="'/search-icon.svg'" alt="search">
         </div>
-        <div @click="displayInfo.openSettings" class="settings-icon">
+        <div @click="emits('open-settings')" class="settings icon">
             <img data-icon src="/settings-icon.svg" alt="search">
         </div>
-        <div @click="displayInfo.sidePanelChange" :class="!displayInfo.isMainWithSidePanel ? 'left' : 'right'"
-            class="hide-button-icon">
+        <div @click="changePanelStatus" :data-turned="isToHide" class="icon">
             <img data-icon src="/hide-button.svg" alt="Hide/Fix">
         </div>
     </div>
 </template>
 <style scoped lang="scss">
-.logo {
-    height: 75%;
-    display: flex;
-    justify-content: center;
-
-    & img {
-        max-height: 100%;
-    }
+.v-enter-active,
+.v-leave-active {
+    opacity: 1;
+    transition: opacity 0.5s ease;
 }
 
-.search-bar-icon,
-.settings-icon,
-.hide-button-icon {
-    height: 30px;
-    width: 30px;
-    border-radius: 100%;
+.v-enter-from,
+.v-leave-to {
+    opacity: 0;
+}
+
+.navigation {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    transition: all .5s ease;
-    cursor: pointer;
+    transition: all 0.5s ease;
 
-    & img {
-        transition: transform .5s ease;
-        aspect-ratio: 1/1;
+    &[data-search-bar-on="true"] {
+        height: 65%;
     }
 
-    &:hover {
-        background-color: var(--button-color-hover);
+    &[data-search-bar-on="false"] {
+        height: 100%;
     }
-}
 
-.settings-icon:hover {
-    & img {
-        transform: rotate(90deg);
+    .logo {
+        height: 75%;
+        display: flex;
+        justify-content: center;
+
+        & img {
+            max-height: 100%;
+        }
     }
-}
 
-.left>img {
-    transform: rotate(180deg);
-}
+    .icon {
+        height: 30px;
+        width: 30px;
+        border-radius: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: all .5s ease;
+        cursor: pointer;
 
-.right>img {
-    transform: rotate(0);
+        &.settings:hover {
+            & img {
+                transform: rotate(90deg);
+            }
+        }
+
+        & img {
+            transition: transform .5s ease;
+            aspect-ratio: 1/1;
+        }
+
+        &:hover {
+            background-color: var(--button-color-hover);
+        }
+
+        &[data-turned="true"]>img {
+            transform: rotate(180deg);
+        }
+
+        &[data-turned="false"]>img {
+            transform: rotate(0);
+        }
+    }
+
+
 }
 </style>

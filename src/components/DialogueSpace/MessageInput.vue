@@ -1,53 +1,48 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 import { useMessengerInfoStorage } from '@storage';
+import { MessageDto } from '@models';
 
 const messengerInfo = useMessengerInfoStorage();
 
-const message = ref("");
-const isTextEntered = ref(false);
-
-watch(() => message.value, () => {
-    isTextEntered.value = message.value.length != 0;
-}, { immediate: true })
+const message = ref<MessageDto>({ content: "" });
 
 const sendNewMessage = () => {
-    messengerInfo.addMessageToChat({ content: message.value });
-    message.value = "";
+    messengerInfo.addMessageToChat(message.value);
+    message.value.content = "";
 }
 </script>
 
 <template>
-    <div class=" input-field">
-        <div class="input-container">
-            <input v-on:keyup.enter="sendNewMessage()" type="text" v-model="message" placeholder="Write a message..." />
+    <form @submit.prevent="sendNewMessage" class="message-input">
+        <div class="message-input__text">
+            <input type="text" v-model="message.content" placeholder="Write a message..." />
         </div>
-        <div @click="sendNewMessage()" class="send-btn" :class="isTextEntered ? 'send' : ''">Send</div>
-    </div>
+        <button type="submit" class="message-input__submit"
+            :data-message-ready="message.content.length != 0">Send</button>
+    </form>
 </template>
 
 <style scoped lang="scss">
-.input-field {
-    position: absolute;
-    width: calc(100% - 1rem);
+.message-input {
     display: flex;
     justify-content: space-between;
-    border-radius: 1rem;
-    bottom: 0;
-    gap: .5rem;
-    margin: .5rem;
     align-items: center;
+    padding: 7px;
+    position: relative;
 
-    & .input-container {
+    &__text {
         width: 100%;
         display: flex;
         justify-content: center;
+        height: 50px;
+        border-radius: 15px;
+        overflow: hidden;
 
         & input {
             padding: 1rem;
-            height: 2rem;
             font-size: 1.25rem;
-            border-radius: .9rem;
+            height: 100%;
             width: 100%;
             outline: none;
             border: 0;
@@ -55,10 +50,11 @@ const sendNewMessage = () => {
         }
     }
 
-    & .send-btn {
+    &__submit {
         position: absolute;
-        right: .5rem;
-        bottom: 7rem;
+        z-index: 10;
+        right: 10px;
+        bottom: 60px;
         background-color: var(--button-color);
         height: 4rem;
         opacity: .9;
@@ -68,16 +64,18 @@ const sendNewMessage = () => {
         place-content: center;
         transition: all .2s ease;
         border-radius: 50%;
-        transform: translate(200%);
+        transform: translateX(200%);
+        letter-spacing: normal;
         box-shadow: var(--button-color-hover) 0px 0px 7px;
+
+        &[data-message-ready=true] {
+            transform: translateX(0);
+        }
 
         &:hover {
             background-color: var(--button-color-hover);
         }
     }
 
-    & .send {
-        transform: translate(0);
-    }
 }
 </style>

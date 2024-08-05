@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useMessengerInfoStorage } from "@storage";
+import { useUserStore } from "@storage";
 import InputField from '@components/InputField.vue';
 
-const messengerInfo = useMessengerInfoStorage();
+const userStore = useUserStore();
 
-const oldPasswd = ref("");
 const newPasswd = ref("");
 const confPasswd = ref("");
 const passwdWrong = ref(false);
@@ -13,8 +12,7 @@ const passwdWrong = ref(false);
 const tryChangePassword = () => {
     if (newPasswd.value === confPasswd.value) {
         passwdWrong.value = false;
-        messengerInfo.changePassword(oldPasswd.value, newPasswd.value);
-        oldPasswd.value = "";
+        userStore.changePassword(newPasswd.value);
         newPasswd.value = "";
         confPasswd.value = "";
     }
@@ -25,15 +23,13 @@ const tryChangePassword = () => {
 
 </script>
 <template>
-    <div class="change-pass">
+    <form @submit.prevent="tryChangePassword" class="change-pass">
         <div class="inputs">
-            <InputField placeholder="Old password" type="text" v-model:inputModel="oldPasswd" />
-            <InputField placeholder="New password" type="text" v-model:inputModel="newPasswd" />
-            <InputField :class="passwdWrong ? 'wrong' : ''" placeholder="Confirm password" type="text"
-                :func="tryChangePassword" v-model:inputModel="confPasswd" />
+            <InputField placeholder="New password" type="password" v-model="newPasswd" />
+            <InputField placeholder="Confirm password" type="password" v-model="confPasswd" :data-wrong="passwdWrong" />
         </div>
-        <button @click="tryChangePassword">Submit</button>
-    </div>
+        <button type="submit">Submit</button>
+    </form>
 </template>
 <style scoped lang="scss">
 .change-pass {
@@ -55,7 +51,6 @@ const tryChangePassword = () => {
         display: flex;
         align-items: center;
         flex-direction: column;
-
     }
 
     & .btn {

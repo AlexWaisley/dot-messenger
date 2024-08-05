@@ -1,12 +1,14 @@
 <script setup lang="ts">
 const props = defineProps<{ header: string }>();
-const emit = defineEmits(['close']);
+const emits = defineEmits<{
+    (e:'close'):void
+}>();
 </script>
 
 <template>
     <div class="head">
         <div class="name">{{ props.header }}</div>
-        <div @click="$emit('close')" class="close-btn">
+        <div @click="emits('close')" class="close-btn">
             <img data-icon src="/add.svg" alt="Exit">
         </div>
     </div>

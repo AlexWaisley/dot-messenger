@@ -20,9 +20,9 @@ $infinite-animation: 2s linear infinite;
     }
 }
 
-@keyframes drop {
+@keyframes go-down {
     0% {
-        transform: translateX(-200px) scaleY(0.9);
+        transform: translateY(-200px);
     }
 
     5% {
@@ -30,19 +30,25 @@ $infinite-animation: 2s linear infinite;
     }
 
     50% {
-        transform: translateX(0) scaleY(1);
+        transform: translateY(0);
         opacity: 1;
     }
 
-    65% {
-        transform: translateX(-17px) scaleY(0.9);
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
     }
 
-    75% {
-        transform: translateX(-22px) scaleY(0.9);
+    50% {
+        opacity: 0.5;
     }
 
     100% {
-        transform: translateX(0) scaleY(1);
+        opacity: 1;
     }
 }

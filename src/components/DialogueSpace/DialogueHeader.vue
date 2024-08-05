@@ -1,52 +1,42 @@
 <script setup lang="ts">
-import { useDisplayInfoStorage, useMessengerInfoStorage } from '@storage';
-import { ref, watch } from 'vue';
-import DialogueSettings from './AdditionalWindows/DialogueSettings.vue';
-const displayInfo = useDisplayInfoStorage();
+import { useMessengerInfoStorage } from '@storage';
+import { ref } from 'vue';
+import DialogueSettings from '../AdditionalWindows/DialogueSettings.vue';
 const messengerInfo = useMessengerInfoStorage();
 
 const closeDialogue = () => {
-    displayInfo.closeDialogue();
-    messengerInfo.currentChat.id = "0";
+    messengerInfo.currentChat = null;
 }
 
-const chatName = ref(messengerInfo.currentChat.name);
-
 const openSettings = ref(false);
-
-watch(() => messengerInfo.currentChat.id, () => {
-    chatName.value = messengerInfo.currentChat.name;
-}, { immediate: true })
-watch(() => messengerInfo.currentChat.name, () => {
-    chatName.value = messengerInfo.currentChat.name;
-}, { immediate: true })
-
 </script>
 
 <template>
     <div class="chat-header">
         <div @click="openSettings = true" class="chat-info">
-            <span>{{ chatName }}</span>
+            <span>{{ messengerInfo.currentChat?.name }}</span>
         </div>
         <div @click="closeDialogue()" class="back-btn">
             <img data-icon src="/add.svg" alt="Exit">
         </div>
     </div>
-    <Transition>
-        <DialogueSettings v-if="openSettings" @close="openSettings = false" />
-    </Transition>
+    <Teleport to="body">
+        <Transition>
+            <DialogueSettings v-if="openSettings" @close="openSettings = false" />
+        </Transition>
+    </Teleport>
 </template>
 
 <style scoped lang="scss">
 .v-enter-active,
 .v-leave-active {
-    transition: all 0.5s ease;
-    transform: translateY(0);
+    opacity: 1;
+    transition: opacity 0.5s ease;
 }
 
 .v-enter-from,
 .v-leave-to {
-    transform: translateY(-100%);
+    opacity: 0;
 }
 
 .chat-header {
@@ -57,6 +47,7 @@ watch(() => messengerInfo.currentChat.name, () => {
     font-weight: 600;
     font-size: 1.5rem;
     padding: 0 .5rem;
+    height: 50px;
 
     & .chat-info {
         width: 80%;

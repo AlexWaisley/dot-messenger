@@ -1,32 +1,21 @@
 <script setup lang="ts">
 import moment from 'moment';
 import { Message } from '@models';
-import { useMessengerInfoStorage } from '@storage';
+import { useUserStore } from '@storage';
+import { computed } from 'vue';
 
-const messengerInfo = useMessengerInfoStorage();
-import { ref, watch } from 'vue';
-
+const userStore = useUserStore();
 
 const props = defineProps<{
     message: Message
 }>();
 
-const currMessage = ref(props.message);
-const messageTime = ref(moment.unix(props.message.time).format("HH:mm:ss"));
-const isCurrUserMessage = ref(props.message.userId === messengerInfo.user.id);
-
-
-watch(() => props.message, () => {
-    currMessage.value = props.message;
-    messageTime.value = moment.unix(props.message.time).format("HH:mm:ss");
-    isCurrUserMessage.value = props.message.userId === messengerInfo.user.id;
-}, { immediate: true });
-
-
+const isCurrUserMessage = computed<boolean>(() => props.message.userId === userStore.user?.id);
+const messageTime = computed<string>(() => moment.unix(props.message.time).format("HH:mm:ss"));
 </script>
 
 <template>
-    <div :class="isCurrUserMessage ? 'curr-user-message' : 'non-user-message'">
+    <div class="message" :data-message-user="isCurrUserMessage">
         <div class="message-info-container">
             <div class="image-wrapper">
                 <img src="/04856.jpg" alt="someImg">
@@ -47,22 +36,21 @@ watch(() => props.message, () => {
 </template>
 
 <style scoped lang="scss">
-.curr-user-message {
-    background: var(--chat-user-message);
-}
-
-.non-user-message {
-    background: var(--chat-opponent-message);
-}
-
-.non-user-message,
-.curr-user-message {
+.message {
     display: flex;
     transition: all .3s ease;
     align-items: flex-end;
     gap: 1rem;
     padding: .5rem;
     border-radius: .5rem;
+
+    &[data-message-user="true"] {
+        background: var(--chat-user-message);
+    }
+
+    &[data-message-user="false"] {
+        background: var(--chat-opponent-message);
+    }
 
     & .message-info-container {
         display: flex;
@@ -72,7 +60,6 @@ watch(() => props.message, () => {
         gap: .5rem;
         padding: .25rem;
         border-radius: .25rem;
-
 
         & .chat-info {
             width: 100%;
